@@ -1,7 +1,7 @@
 套用学习别人的排版格式,内容基本都没有
 
 <div align="center">
-    <a href="https://gitstar-ranking.com/repositories">仓库排名</a>
+    stars:>50000
 </div>
 <br>
 
