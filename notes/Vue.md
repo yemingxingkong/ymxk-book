@@ -1,8 +1,11 @@
 <!-- GFM-TOC -->
-# 前端
+# Vue
 
-* [一、HTML基础](#一HTML基础)
-  * [HTML概念](#HTML概念)
+* [一、环境配置](#一环境配置)
+  * [NVM](#NVM)
+  * [Node.js](#Node.js)
+  * [NPM](#NPM)
+  * [Yarn](#Yarn)
 * [二、CSS基础](#二CSS基础)
   * [CSS概念](#CSS概念)
   * [CSS选择器](#CSS选择器)
@@ -61,27 +64,151 @@
 * [参考资料](#参考资料)
 <!-- GFM-TOC -->
 
-# 一、HTML基础
+# 一、环境配置
 
-## HTML概念
+## NVM
 
-### 1. 块元素
+### 1. NVM安装
 
-display: block；块元素 div , address , blockquote , center , dir , dl , fieldset , form , h1 , h2 , h3 , h4 , h5 , h6 , hr , isindex , menu , noframes , noscript , ol , p , pre , table , ul , li。
+Linux下的安装
+[nvm](https://github.com/nvm-sh/nvm#install--update-script)
 
-### 2. 内联元素
+windows下的安装
+[nvm-windows](https://github.com/coreybutler/nvm-windows)
+nvm 的windows下载地址：[nvm-windows](https://github.com/coreybutler/nvm-windows/releases) , 选择第二个nvm-setup.zip，这样安装方便些。
+将下载的文件进行解压：nvm-setup.exe，单击开始安装，直接点击下一步解可以，当然我们需要注意一下两个界面：
+设置nvm路径(相当于setting.txt中的root:)：
+设置nvm路径(相当于setting.txt中的path:)：
+这样我们就在windows下面的nvm安装完成了！
 
-display:inline；内联元素 em , img , q , a , abbr , acronym , b , bdo , big , br , cite , code , dfn , em , font , i, input , kbd , label, s , samp , select , small , span , strike , strong , sub , sup ,textarea , tt , u , var。
+安装完成以后需要进行配置
+/**
+*node下载源
+*/
+nvm node_mirror https://npm.taobao.org/mirrors/node/
+/**
+*npm下载源
+*/
+nvm npm_mirror  https://npm.taobao.org/mirrors/npm/
 
-display:none隐藏元素或visibility:hidden可见性。
+### 2. NVM命令
 
-### 3. 图片
+windows下nvm的命令([]中的参数可有可无)：
+|              命令              |                                             意义                                             |
+| :----------------------------: | :------------------------------------------------------------------------------------------: |
+|            nvm arch            |                             查看当前系统的位数和当前nodejs的位数                             |
+| nvm install < version > [arch] |                安装制定版本的node 并且可以指定平台 version 版本号  arch 平台                 |
+|      nvm list [available]      |                                                                                              |
+|           - nvm list           |                                      查看已经安装的版本                                      |
+|      - nvm list installed      |                                      查看已经安装的版本                                      |
+|      - nvm list available      |                                    查看网络可以安装的版本                                    |
+|             nvm on             |                                      打开nodejs版本控制                                      |
+|            nvm off             |                                      关闭nodejs版本控制                                      |
+|        nvm proxy [url]         |                                        查看和设置代理                                        |
+|     nvm node_mirror [url]      |      设置或查看setting.txt中的node_mirror，如果不设置的默认是 https://nodejs.org/dist/       |
+|      nvm npm_mirror [url]      | 设置或查看setting.txt中的npm_mirror,如果不设置的话默认：https://github.com/npm/npm/archive/. |
+|   nvm uninstall < version >    |                                        卸载制定的版本                                        |
+|    nvm use [version] [arch]    |                                   切换制定的node版本和位数                                   |
+|        nvm root [path]         |                                      设置和查看root路径                                      |
+|          nvm version           |                                        查看当前的版本                                        |
+|              GIF               |                                             无损                                             |
+|              GIF               |                                             无损                                             |
+|              GIF               |                                             无损                                             |
+|              GIF               |                                             无损                                             |
+|              GIF               |                                             无损                                             |
+下面是安装和使切换nodejs的几个简单的命令使用：
+nvm install 10.16.0 64-bit
+nvm use 10.16.0
+nvm list //查看以己经安装的。
 
-| 格式  | 损失  |  透明  |    特有    | 透明  |
-| :---: | :---: | :----: | :--------: | :---: |
-|  GIF  | 无损  |  透明  |    256     | 动画  |
-| JPEG  | 有损  | 不透明 | 1000万以上 |       |
-|  PNG  | 无损  |  透明  | 1000万以上 |       |
+## Node.js
+
+### 1. Node安装
+
+nvm install 10.16.0 64-bit
+
+## NPM
+
+### 1. NPM查看安装信息
+
+查看所有全局安装的模块：npm list -g
+查看某个模块的版本号：npm list grunt
+
+### 2. package.json
+
+package.json 位于模块的目录下，用于定义包的属性。接下来让我们来看下 express 包的 package.json 文件，位于 node_modules/express/package.json 内容
+
+```json
+{
+  "name": "express",
+  "version": "4.13.3",
+  "description": "Fast, unopinionated, minimalist web framework",
+  "homepage": "http://expressjs.com/",
+  "author": {
+    "name": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca"
+  },
+  "contributors": [
+    {
+      "name": "Aaron Heckmann",
+      "email": "aaron.heckmann+github@gmail.com"
+    },
+    {
+      "name": "Ciaran Jessup",
+      "email": "ciaranj@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/strongloop/express.git"
+  },
+  "homepage": "http://expressjs.com/",
+  "keywords": [
+    "express",
+    "framework"
+  ],
+  "dependencies": {
+    "accepts": "~1.2.12",
+    "array-flatten": "1.1.1"
+  }
+}
+```
+
+Package.json 属性说明
+name - 包名。
+version - 包的版本号。
+description - 包的描述。
+homepage - 包的官网 url 。
+author - 包的作者姓名。
+contributors - 包的其他贡献者姓名。
+dependencies - 依赖包列表。如果依赖包没有安装，npm 会自动将依赖包安装在 node_module 目录下。
+repository - 包代码存放的地方的类型，可以是 git 或 svn，git 可在 Github 上。
+main - main 字段指定了程序的主入口文件，require('moduleName') 就会加载这个文件。这个字段的默认值是模块根目录下面的 index.js。
+keywords - 关键字
+
+### 3.使用淘宝 NPM 镜像
+
+$ npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+## Yarn
+
+### 1.yarn命令
+
+安装yarn
+npm install -g yarn
+
+下载依赖
+yarn install
+
+启动
+yarn run serve
+
+编译项目
+yarn run build
+
+整理和修复文件
+yarn run lint
 
 ## 求助
 
