@@ -19,7 +19,7 @@
 
 ## :musical_score: 前端
 
-- [前端](https://github.com/yemingxingkong/ymxk-notes/blob/master/notes/前端.md)
+- [前端](https://github.com/yemingxingkong/ymxk-notes/blob/master/notes/Web.md)
 
 ## :pencil2: 算法
 
