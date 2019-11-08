@@ -6,11 +6,8 @@
   * [Node.js](#Node.js)
   * [NPM](#NPM)
   * [Yarn](#Yarn)
-* [二、CSS基础](#二CSS基础)
-  * [CSS概念](#CSS概念)
-  * [CSS选择器](#CSS选择器)
-  * [CSS动画](#CSS动画)
-  * [CSS公共](#CSS公共)
+* [二、Webpack](#二Webpack)
+  * [Webpack概念](#Webpack概念)
 * [三、JavaScript基础](#三JavaScript基础)
   * [JavaScript概念](#JavaScript概念)
   * [JavaScript引用类型](#JavaScript引用类型)
@@ -111,11 +108,6 @@ windows下nvm的命令([]中的参数可有可无)：
 |    nvm use [version] [arch]    |                                   切换制定的node版本和位数                                   |
 |        nvm root [path]         |                                      设置和查看root路径                                      |
 |          nvm version           |                                        查看当前的版本                                        |
-|              GIF               |                                             无损                                             |
-|              GIF               |                                             无损                                             |
-|              GIF               |                                             无损                                             |
-|              GIF               |                                             无损                                             |
-|              GIF               |                                             无损                                             |
 下面是安装和使切换nodejs的几个简单的命令使用：
 nvm install 10.16.0 64-bit
 nvm use 10.16.0
@@ -210,98 +202,150 @@ yarn run build
 整理和修复文件
 yarn run lint
 
-## 求助
+# 二、Webpack
 
-* [MDN](https://developer.mozilla.org/zh-CN/)
-* [菜鸟教程](https://www.runoob.com/)
-* [W3school](https://www.w3school.com.cn/)
-* [踏得](https://techbrood.com/h5b2a)
-* [压缩图片 https://www.picdiet.com/zh-cn](https://www.picdiet.com/zh-cn)
+## Webpack概念
 
-# 二、CSS基础
+### 1. webpack是什么
 
-## CSS概念
+1.webpack构建工具
+2.自带模块化(commonjs规范)
+3.编译：es6 -> es5 , jsx -> es5 , ts(typescript) ->  js
+4.gulp所做的事情，webpack都可以做到
+5.自带服务器，服务器也是基于Node（webpack-dev-server）
+6.那些环境经常使用到webpack：react 、 vue
+7.webpack版本：1.x 、2.x 、3.x 、4.x版本
 
-### 1. @media
+### 2. 安装webpack3.x
 
-语法 @media mediatype and|not|only (media feature) { CSS-Code; }。
+1.安装全局webpack
+  npm install -g webpack@3.x
+2.项目初始化package.json
+  npm init -y
+3.安装项目依赖的webpack
+  npm install -D webpack@3.x
+4.项目根目录创建两个文件夹src和dist
+  src:源码文件
+  dist：编译之后的文件
+5.编写代码
+  app.js:document.write("hello webpack");
+6.执行webpack
+  webpack 路径/入口文件  路径/出口文件
+  webpack src/app.js    dist/bundle.js
+7.编写代码
+  hello.js：
+  module.exports = function(){
+    var hello = document.createElement("div");
+    hello.textContent = "hello Webpack3.x";
+    return hello;
+  }
 
-外部<link rel="stylesheet" media="mediatype and|not|only (media feature)" href="mystylesheet.CSS"><link rel="stylesheet" media="only screen and (max-width: 600px)" href="mystylesheet.CSS">。
+安装webpack4.x
+1.安装全局webpack
+  npm install --global webpack
+  npm install --global webpack-cli
+2.项目初始化package.json
+  npm init -y
+3.安装项目依赖的webpack
+  npm install --save-dev webpack
+  npm install --save-dev webpack@3.x
 
-适配
+### 3. 生成webpack.config.js文件
 
-```html
-/* 超小型设备(手机, 600px and down) */
-@media only screen and (max-width: 600px) {
-  .example {background: red;}
+配置入口和出口
+module.exports = {
+  entry:__dirname +"/src/app.js",
+  output:{
+    path:__dirname + "/dist",
+    filename:"bundle.js"
+  }
 }
-/* 小型设备 (纵向平板电脑 and 大型手机, 600px and up) */
-@media only screen and (min-width: 600px) {
-  .example { background: green; }
+
+### 4. webpack执行的快捷方案
+
+在package.json文件中代替webpack的执行
+"scripts": {
+  "build":"webpack"
 }
-```
+执行：npm run build
 
-## CSS选择器
+### 5. webpack调试
 
-### 1. 优先级
+生成错误信息文件
+  配置webpack.config.js文件
+  添加devtool:"eval-source-map"
+      devtool:
+        eval
+        source-map
+        hidden-source-map
+        inline-source-map
+        eval-source-map
+        cheap-source-map
+        cheap-module-source-map
 
-权重：相互之间叠加 	标记选择器：1 类选择器：10  id选择器：100
 
-特殊情况 继承样式的权重都为0 行内样式优先，在本行中使用的 权重相同，就近原则
+6.服务器
+  1.全局安装服务器
+    npm install -g webpack-dev-server@2.x
+  2.安装项目依赖
+    npm install -D webpack-dev-server@2.x
+  3.运行webpack服务器
+    webpack-dev-server
+  4.配置服务器的快捷执行方案
+    "scripts": {
+      "build": "webpack",
+      "dev":"webpack-dev-server"
+    }
+    执行：npm run dev
+  5.修改服务器根路径
+    "dev":"webpack-dev-server --content-base dist"
+  6.热更新
+    "dev":"webpack-dev-server --content-base dist --inline --hot"
+  7.服务器配置
+      --content-base：指定服务器运行根目录
+      --inline：在线更新
+      --port: 修改端口
 
-!important命令 被赋予最大优先级 #header{color:red!important;}。
-
-### 2. 伪类
-
-伪元素
-
-:before 被选元素的内容前面插入内容，必须配合content指定插入内容 可为文本也可图片 <元素>:before{content:文字/url()} <p>:before{content:"夜明星空"; color:#c06;}
-:after 在某个元素之后插入内容
-
-链接伪类
-
-a:link{} 未访问时超链接状态
-a:visited 访问后
-a:hover 鼠标经过，悬停
-a:active 鼠标单击不动时。
-
-### 3. 盒子模型
-
-### 4. 浮动定位
-
-浮动
-
-浮动float 设置浮动元素的属性会脱离标准文档流控制 float：属性值 left向左浮动right右none默认
-清除浮动 clear：属性值 left right both清除两侧 使用空标记清除浮动 .box04{clear: left;} <div class="box04"></div> overflow清除浮动 overflow: hidden;父元素中应用 after伪对象清除浮动 .father:after{display: block;clear: both;content: ""; visibility: hidden;height: 0;}
-
-定位position
-
-静态定位static 默认值，无法通过边偏移来改变位置
-相对relative 相对定位后，位置改变，但是它在文档流中的位置仍然保留
-绝对absolute 依据最近的已经定位的父元素进行定位， 若所有父元素都未定位，则依靠body元素定位
-固定fixed 始终依据浏览器窗口来显示位置
-z-index层叠等级属性 取值正整数，负整数和0.默认为0，取值越大，定位属性在层叠元素中越居中
-
-## CSS动画
-
-过渡，变形，动画
-
-## CSS公共
-
-逻辑区
-页面上彼此相关的一组元素
-1找出逻辑区
-2使用div标记逻辑区
-3标出div id="cats"
-4增加一些样式
-5展现更多结构
-6在结构上增加结构
+7.module
+  loaders(use)
+  loader是webpack可以通过配置脚本，或者外部依赖来执行一些功能
+  例如：es6 -> es5  jsx -> js  less -> css
+  1.配置loaders
+      1.test：一个匹配loader要做操作的文件的一个正则表达式（必须）
+      2.loader(use)：loader要执行的任务的名字（必须）
+      3.options:为loader提供一些外部选项配置(可选项)
+  2.json格式的数据转化成js的对象
+    注意：当前的json-loader只是为了测试，我们当前安装的webpack的版本3.x
+          事实上，在当前版本中，已经集成了json-loader,不需要单独安装了
+    1.安装json-loader
+      npm install -D json-loader
+    2.编写配置文件代码
+      {
+        test:/\.json$/,
+        use:"json-loader"
+      }
 
 # 三、JavaScript基础
 
-## JavaScript概念
+## VueDevtools插件的安装
 
-组成：核心(ECMAScript)，提供核心语言功能； 文档对象模型(DOM)，提供访问和操作网页内容的方法和接口；浏览器对象模型(BOM)，提供与浏览器交互的方法和接口。
+github下载插件，npm包安装依赖，拖入浏览器扩展程序
+
+具体操作：
+1.下载chrome扩展插件。
+  在github上下载压缩包并解压到本地，github下载地址：https://github.com/vuejs/vue-devtools
+2.npm install
+  下载完成后打开命令行cmd进入vue-devtools-master文件夹，
+  1.npm install，安装依赖包；如果安装太慢，请参照文章末尾说明进行操作。
+  2.npm run build
+  npm run build 执行完，会在shells>chrome下的src文件夹里生产如上图所示的几个js文件；
+  若不执行以上命令会报错，无法加载背景脚本"build/background.js"，如下图：
+3.打开shells>chrome>manifest.json并把json文件里的"persistent":false改成true
+4.扩展chrome插件
+  1.打开chrome浏览器，打开更多工具>扩展程序；
+  2.再点击加载已解压的扩展程序，然后把shells>chrome文件夹放入
+5.测试安装成功
+在插件的目录下执行npm run dev，这个时候我们的插件就可以运行了,打开localhost:8080可以看到插件已经安装并运行了。
 
 ### 1. 数据类型
 
