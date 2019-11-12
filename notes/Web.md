@@ -11,17 +11,10 @@
 * [三、JavaScript基础](#三JavaScript基础)
   * [JavaScript概念](#JavaScript概念)
   * [JavaScript引用类型](#JavaScript引用类型)
-* [四、文件系统](#四文件系统)
-  * [分区与文件系统](#分区与文件系统)
-  * [组成](#组成)
-  * [文件读取](#文件读取)
-  * [磁盘碎片](#磁盘碎片)
-  * [block](#block)
-  * [inode](#inode)
-  * [目录](#目录)
-  * [日志](#日志)
-  * [挂载](#挂载)
-  * [目录配置](#目录配置)
+* [四、面向对象](#四面向对象)
+  * [理解对象](#理解对象)
+  * [创建对象](#创建对象)
+  * [继承](#继承)
 * [五、文件](#五文件)
   * [文件属性](#文件属性)
   * [文件与目录的基本操作](#文件与目录的基本操作)
@@ -535,98 +528,411 @@ Math
   random() 方法
   其他方法
 
-# 四、文件系统
+## JavaScript模块化
 
-## 分区与文件系统
+### 1.模块基础
+
+闭包:因作用域问题,使用闭包
+
+```javascript
+function Demo() {
+  var hello = "hello";
+  return function () {
+    // 闭包！！！
+    //
+  }
+}
+Demo();
+```
+
+模块：设计模式规范：开闭原则：对扩展开放，对修改关闭
+
+```javascript
+// 作用域独立
+// 自执行
+(function(){
+  function userInfo(){
+    var name = "iwen";
+    var age = 20;
+    return {
+      name:name,
+      age:age
+    }
+  }
+  console.log(userInfo().age);
+  var info = userInfo()
+  console.log(info.name);
+})();
+
+// 模块!
+var module = (function () {
+  var Demo = {
+
+  }
+  var hello = "hello";
+  function userInfo() {
+    var name = "iwen";
+    var age = 20;
+    console.log(name);
+  }
+  return {
+    userInfo: userInfo,
+    hello: hello
+  }
+})();
+console.log(module.hello);
+module.userInfo();
+```
+
+私有和公有的属性和方法
+
+```javascript
+// 私有与公有
+var module = (function () {
+  var infoObj = {
+    name: 'iwen',
+    age: 20
+  }
+
+  function getName() {
+    if (!infoObj.name) {
+      return;
+    }
+    return infoObj.name;
+  }
+
+  function getAge() {
+    if (!infoObj.age) {
+      return;
+    }
+    return infoObj.age
+  }
+
+  function setAge(age) {
+    if (age) {
+      infoObj.age = age;
+    }
+  }
+
+  function setName(name) {
+    infoObj.name = name
+  }
+  // 公有方法： getName,getAge,setAge,setName
+  // 私有方法： infoObj
+  return {
+    getName: getName,
+    getAge: getAge,
+    setAge: setAge,
+    setName: setName
+  }
+})();
+console.log(module.getName());
+console.log(module.getAge());
+module.setAge(30);
+console.log(module.getAge());
+// module.setName("ice");
+```
+
+模块扩展
+
+```javascript
+/*
+  扩展(放大模式)
+*/
+var module1 = (function () {
+  function Demo1() {
+    console.log("Demo1");
+  }
+
+  function Demo2() {
+    console.log("Demo2");
+  }
+  return {
+    Demo1: Demo1,
+    Demo2: Demo2
+  }
+})()
+// 对于程序而言，一个module肯定不能完成所有的事情
+// 如果现在需要扩展？
+var module2 = (function (module1) {
+  function Demo3() {
+    console.log(module1.Demo1())
+  }
+
+  function M2Demo() {
+    console.log("M2Demo")
+  }
+  // 直接挂载到module1身上
+  module1.Demo4 = function () {
+    console.log("M2M1Demo4")
+  }
+  return {
+    Demo3: Demo3,
+    M2Demo: M2Demo,
+    module1: module1
+  }
+})(module1);
+module2.Demo3()
+module2.M2Demo()
+module2.module1.Demo4();
+```
+
+模块扩展(放大模式)
+
+```javascript
+/*
+  扩展(放大模式)
+*/
+var module1 = (function () {
+  function Demo1() {
+    console.log("Demo1");
+  }
+
+  function Demo2() {
+    console.log("Demo2");
+  }
+  return {
+    Demo1: Demo1,
+    Demo2: Demo2
+  }
+})()
+// 对于程序而言，一个module肯定不能完成所有的事情
+// 如果现在需要扩展？
+var module2 = (function (module1) {
+  function Demo3() {
+    console.log(module1.Demo1())
+  }
+
+  function M2Demo() {
+    console.log("M2Demo")
+  }
+  // 直接挂载到module1身上
+  module1.Demo4 = function () {
+    console.log("M2M1Demo4")
+  }
+  return {
+    Demo3: Demo3,
+    M2Demo: M2Demo,
+    module1: module1
+  }
+})(module1);
+module2.Demo3()
+module2.M2Demo()
+module2.module1.Demo4();
+```
+
+Commonjs规范
+  文件与文件之间的隔离
+
+```javascript
+/*
+  demo1.js中
+*/
+var demo = "demo"
+//导出
+module.exports = demo;
+```
+
+```javascript
+/*
+  demo2.js中
+*/
+// 引入
+var demo = require("./demo1.js");
+console.log(demo);
+```
+
+### 2.Require
+
+requirejs:
+应用场景：1.后端渲染：require（路由）；2.某个页面或者主页面具有很多js文件引入
+  1.require介绍：
+    1.模块化
+    2.帮我们管理文件依赖
+    3.管理引入js文件
+  2.引入require
+    <script data-main="js/main.js" src="js/libs/require.js"></script>
+  3.配置main.js
+    requirejs.config({
+      baseUrl: 'js/',
+      paths:{
+        "index":"apps/index",
+        "getname":"apps/getname",
+        "jquery":"libs/jquery-3.2.1"
+      }
+    })
+    requirejs(["index","getname","jquery"],function(index,getname,$){
+    })
+
+src 资源文件夹
+  app 自己的js index.js getname.js
+  lib 第三方引用的js require.js jquery-3.2.1.js
+  main.js
+index.html
+
+```javascript
+// 配置文件
+requirejs.config({
+  // 基础路径
+  baseUrl: 'js/',
+  // 映射
+  // .js可以省略
+  paths: {
+    "index": "apps/index",
+    "getname": "apps/getname",
+    "jquery": "libs/jquery-3.2.1"
+  }
+})
+requirejs(["index", "getname", "jquery"], function (index, getname, $) {
+  // 主入口文件
+  // 调用
+  index.init();
+})
+```
+
+定义模块 index.js文件
+
+```javascript
+// 定义模块
+// define({
+//   name:"iwen",
+//   age:20
+// })
+
+// 函数式定义
+// define(function(){
+//   var demo = 10;
+//   function demo(){
+//
+//   }
+// })
+
+// // 存在依赖的函数式定义
+// define(["jquery"],function($){
+//   console.log($ );
+// })
+
+// 依赖注入
+define(["getname","jquery"],function(getname,$){
+  function init(){
+    $("#root").html(getname.text());
+  }
+  return {
+    init:init
+  }
+})
+```
+
+getname.js文件
+
+```javascript
+define(function(){
+  function text(){
+    return "我是一个文本"
+  }
+  return {
+    text:text
+  }
+})
+```
+
+require使用方式
+
+```javascript
+// 主页面
+<script data-main="js/main.js" src="js/lib/require.js"></script>
+<div class="root"></div>
+// main.js文件
+requirejs.config({
+  baseUrl:"js/",
+  paths:{
+    "jquery":"lib/jquery-3.2.1",
+    "data":"app/data",
+    "index":"app/index",
+    "view":"app/view"
+  }
+})
+requirejs(["jquery","data","index","view"],function($,data,index,view){
+  index.init();
+})
+// index.js文件
+define(["data", "view"], function (data, view) {
+  function init() {
+    view.setView(data.data);
+  }
+  return {
+    init:init
+  }
+})
+// data.js文件
+define(function(){
+  return{
+    data:"hello requirejs"
+  }
+})
+// view.js文件
+define(["jquery"], function ($) {
+  // 获取视图
+  /*
+    set和get
+    set：设置
+    get：获取
+  */
+  function getView() {
+    return $(".root");
+  }
+
+  function setView(data) {
+    getView().html(data);
+  }
+
+  return {
+    setView: setView
+  }
+})
+```
+
+require需要去遵循defind规范
+若是第三方不遵循define模块定义规范,得导出为遵循的方案进行shim
+
+```javascript
+requirejs.config({
+  baseUrl:"js/",
+  paths:{
+    "jquery":"lib/jquery-3.2.1",
+    "swiper":"lib/swiper.min",
+    "index":"app/index"
+  },
+  // 为那些没有使用define()来声明依赖关系、设置
+  // 模块的"浏览器全局变量注入"型脚本做依赖和导出配置
+  shim:{
+    "swiper":{
+      // 依赖的库
+      deps:["jquery"],
+      // 导出为swiper
+      exports:"swiper"
+    }
+  }
+})
+requirejs(["jquery","swiper","index"],function($,swiper,index){
+
+})
+```
+
+```javascript
+```
+
+### 3.Require实战
+
+# 四、面向对象
+
+## 理解对象
+
+## 创建对象
+
+## 继承
 
 对分区进行格式化是为了在分区上建立文件系统。一个分区通常只能格式化为一个文件系统，但是磁盘阵列等技术可以将一个分区格式化为多个文件系统。
-
-## 组成
-
-最主要的几个组成部分如下：
-
-- inode：一个文件占用一个 inode，记录文件的属性，同时记录此文件的内容所在的 block 编号；
-- block：记录文件的内容，文件太大时，会占用多个 block。
-
-除此之外还包括：
-
-- superblock：记录文件系统的整体信息，包括 inode 和 block 的总量、使用量、剩余量，以及文件系统的格式与相关信息等；
-- block bitmap：记录 block 是否被使用的位图。
-
-<div align="center"> <img src="pics/BSD_disk.png" width="800"/> </div><br>
-
-## 文件读取
-
-对于 Ext2 文件系统，当要读取一个文件的内容时，先在 inode 中查找文件内容所在的所有 block，然后把所有 block 的内容读出来。
-
-<div align="center"> <img src="pics/12a65cc6-20e0-4706-9fe6-3ba49413d7f6.png" width="500px"> </div><br>
-
-而对于 FAT 文件系统，它没有 inode，每个 block 中存储着下一个 block 的编号。
-
-<div align="center"> <img src="pics/5b718e86-7102-4bb6-8ca5-d1dd791530c5.png" width="500px"> </div><br>
-
-## 磁盘碎片
-
-指一个文件内容所在的 block 过于分散，导致磁盘磁头移动距离过大，从而降低磁盘读写性能。
-
-## block
-
-在 Ext2 文件系统中所支持的 block 大小有 1K，2K 及 4K 三种，不同的大小限制了单个文件和文件系统的最大大小。
-
-|     大小     |  1KB  |  2KB  |  4KB  |
-| :----------: | :---: | :---: | :---: |
-| 最大单一文件 | 16GB  | 256GB |  2TB  |
-| 最大文件系统 |  2TB  |  8TB  | 16TB  |
-
-一个 block 只能被一个文件所使用，未使用的部分直接浪费了。因此如果需要存储大量的小文件，那么最好选用比较小的 block。
-
-## inode
-
-inode 具体包含以下信息：
-
-- 权限 (read/write/excute)；
-- 拥有者与群组 (owner/group)；
-- 容量；
-- 建立或状态改变的时间 (ctime)；
-- 最近读取时间 (atime)；
-- 最近修改时间 (mtime)；
-- 定义文件特性的旗标 (flag)，如 SetUID...；
-- 该文件真正内容的指向 (pointer)。
-
-inode 具有以下特点：
-
-- 每个 inode 大小均固定为 128 bytes (新的 ext4 与 xfs 可设定到 256 bytes)；
-- 每个文件都仅会占用一个 inode。
-
-inode 中记录了文件内容所在的 block 编号，但是每个 block 非常小，一个大文件随便都需要几十万的 block。而一个 inode 大小有限，无法直接引用这么多 block 编号。因此引入了间接、双间接、三间接引用。间接引用让 inode 记录的引用 block 块记录引用信息。
-
-<div align="center"> <img src="pics/inode_with_signatures.jpg" width="600"/> </div><br>
-
-## 目录
-
-建立一个目录时，会分配一个 inode 与至少一个 block。block 记录的内容是目录下所有文件的 inode 编号以及文件名。
-
-可以看到文件的 inode 本身不记录文件名，文件名记录在目录中，因此新增文件、删除文件、更改文件名这些操作与目录的写权限有关。
-
-## 日志
-
-如果突然断电，那么文件系统会发生错误，例如断电前只修改了 block bitmap，而还没有将数据真正写入 block 中。
-
-ext3/ext4 文件系统引入了日志功能，可以利用日志来修复文件系统。
-
-## 挂载
-
-挂载利用目录作为文件系统的进入点，也就是说，进入目录之后就可以读取文件系统的数据。
-
-## 目录配置
-
-为了使不同 Linux 发行版本的目录结构保持一致性，Filesystem Hierarchy Standard (FHS) 规定了 Linux 的目录结构。最基础的三个目录如下：
-
-- / (root, 根目录)
-- /usr (unix software resource)：所有系统默认软件都会安装到这个目录；
-- /var (variable)：存放系统或程序运行过程中的数据文件。
-
-<div align="center"> <img src="pics/linux-filesystem.png" width=""/> </div><br>
 
 # 五、文件
 
