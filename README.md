@@ -20,6 +20,7 @@
 ## :musical_score: 前端
 
 - [前端](https://github.com/yemingxingkong/ymxk-notes/blob/master/notes/Web.md)
+- [Vue](https://github.com/yemingxingkong/ymxk-notes/blob/master/notes/Vue.md)
 
 ## :pencil2: 算法
 

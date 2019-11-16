@@ -6,9 +6,10 @@
   * [Node.js](#Node.js)
   * [NPM](#NPM)
   * [Yarn](#Yarn)
-* [二、模块基础](#二模块基础)
-* [三、Webpack](#二Webpack)
+* [二、前端构建工具](#二前端构建工具)
   * [Webpack概念](#Webpack概念)
+  * [Gulp概念](#Gulp概念)
+* [三、模块基础](#三模块基础)
 * [四、JavaScript基础](#三JavaScript基础)
   * [JavaScript概念](#JavaScript概念)
   * [JavaScript引用类型](#JavaScript引用类型)
@@ -194,9 +195,7 @@ yarn run build
 整理和修复文件
 yarn run lint
 
-# 二、模块基础
-
-# 三、Webpack
+# 二、前端构建工具
 
 ## Webpack概念
 
@@ -277,47 +276,226 @@ module.exports = {
         cheap-source-map
         cheap-module-source-map
 
+### 6. webpack服务器
 
-6.服务器
-  1.全局安装服务器
-    npm install -g webpack-dev-server@2.x
-  2.安装项目依赖
-    npm install -D webpack-dev-server@2.x
-  3.运行webpack服务器
-    webpack-dev-server
-  4.配置服务器的快捷执行方案
-    "scripts": {
-      "build": "webpack",
-      "dev":"webpack-dev-server"
+1.全局安装服务器
+  npm install -g webpack-dev-server@2.x
+2.安装项目依赖
+  npm install -D webpack-dev-server@2.x
+3.运行webpack服务器
+  webpack-dev-server
+4.配置服务器的快捷执行方案
+  "scripts": {
+    "build": "webpack",
+    "dev":"webpack-dev-server --content-base dist --inline --hot --port=8088"
+  }
+  执行：npm run dev
+5.修改服务器根路径
+  "dev":"webpack-dev-server --content-base dist"
+6.热更新
+  "dev":"webpack-dev-server --content-base dist --inline --hot"
+7.服务器配置
+    --content-base：指定服务器运行根目录
+    --inline：在线更新
+    --port: 修改端口
+
+### 7. webpack-module
+
+loaders(use)
+loader是webpack可以通过配置脚本，或者外部依赖来执行一些功能
+例如：es6 -> es5  jsx -> js  less -> css
+1.配置loaders
+    1.test：一个匹配loader要做操作的文件的一个正则表达式（必须）
+    2.loader(use)：loader要执行的任务的名字（必须）
+    3.options:为loader提供一些外部选项配置(可选项)
+2.json格式的数据转化成js的对象
+  注意：当前的json-loader只是为了测试，我们当前安装的webpack的版本3.x
+        事实上，在当前版本中，已经集成了json-loader,不需要单独安装了
+  1.安装json-loader
+    npm install -D json-loader
+  2.编写配置文件代码
+    {
+      test:/\.json$/,
+      use:"json-loader"
     }
-    执行：npm run dev
-  5.修改服务器根路径
-    "dev":"webpack-dev-server --content-base dist"
-  6.热更新
-    "dev":"webpack-dev-server --content-base dist --inline --hot"
-  7.服务器配置
-      --content-base：指定服务器运行根目录
-      --inline：在线更新
-      --port: 修改端口
 
-7.module
-  loaders(use)
-  loader是webpack可以通过配置脚本，或者外部依赖来执行一些功能
-  例如：es6 -> es5  jsx -> js  less -> css
-  1.配置loaders
-      1.test：一个匹配loader要做操作的文件的一个正则表达式（必须）
-      2.loader(use)：loader要执行的任务的名字（必须）
-      3.options:为loader提供一些外部选项配置(可选项)
-  2.json格式的数据转化成js的对象
-    注意：当前的json-loader只是为了测试，我们当前安装的webpack的版本3.x
-          事实上，在当前版本中，已经集成了json-loader,不需要单独安装了
-    1.安装json-loader
-      npm install -D json-loader
-    2.编写配置文件代码
-      {
-        test:/\.json$/,
-        use:"json-loader"
-      }
+### 8.es6 -> es5
+
+1.安装依赖
+  npm install -D babel-core babel-loader babel-preset-es2015
+2.配置webpack.config.js文件
+  {
+    test:/\.js$/,
+    use:"babel-loader",
+    options:{
+        presets:["es2015"]
+    }
+  }
+
+未知,自己尝试
+npm install --save-dev @babel/preset-react
+npm install --save-dev @babel/core @babel/cli @babel/preset-env
+npm install --save @babel/polyfill
+
+### 9.构建react环境(webpack+ES6+React)
+
+1.安装react
+  npm install --save react react-dom
+  npm install --save-dev babel-preset-react
+2.编写配置文件
+  {
+    test:/\.(js|jsx)$/,
+    use:"babel-loader"
+  }
+  <!-- 可以不用
+  增加.babelrc文件 -->
+3.编写代码
+  import React from "react"
+  import ReactDOM from "react-dom"
+  class App extends React.Component{
+    render(){
+      return(
+        <div>React EVN</div>
+      )
+    }
+  }
+  ReactDOM.render(<App />,document.getElementById("root"))
+
+### 10.CSS处理
+
+1.安装css相关依赖
+  npm install -D css-loader style-loader
+2.添加配置
+  {
+    test:/\.css$/,
+    use:[
+      "style-loader",
+      "css-loader"
+    ]
+  }
+
+### 11.图片配置
+
+1.安装依赖：
+  npm install -D file-loader url-loader
+2.添加配置
+  {
+    test:/\.(png|jpg|gif|jpeg|svg)$/,
+    use:"url-loader?limit=2048" // 大于2M进行压缩
+  }
+
+### 12.Less和Sass
+
+1.安装
+  npm install --save-dev less less-loader
+2.添加配置
+  {
+    test:/\.less$/,
+    use:[
+      "style-loader",
+      "css-loader",
+      "less-loader"
+    ]
+  }
+
+### 13.插件(plugins)
+
+1.打开浏览器
+  安装：
+    npm install -D open-browser-webpack-plugin
+  配置：
+2.HTML模板
+  安装：
+    npm install -D html-webpack-plugin
+  配置：
+3.内置插件（省略后缀名）
+  resolve:{
+    extensions:['.js','.jsx']
+  }
+
+### 14.生产环境的搭建
+
+安装
+  npm install -D cross-env
+  npm install -D babel-plugin-react-transform
+  npm install -D react-transform-hmr
+  npm install -D babel-preset-stage-2
+
+## Gulp概念
+
+自动化。对于需要反复重复的任务，例如压缩（minification）、编译、单元测试、linting等，自动化工具可以减轻你的劳动，简化你的工作。
+gulp或者grunt都仅仅是一个操作平台，他们本身做不了任何事情，要做事情需要通过插件
+
+1.gulp的使用
+  全局安装：
+      npm install --global gulp
+  创建项目：
+      LearnGulp
+  项目依赖安装：
+      npm install --save-dev gulp
+  在项目根目录下创建一个名为 gulpfile.js 的文件：
+      var gulp = require('gulp');
+      gulp.task('default', function() {
+      // 将你的默认的任务代码放在这
+      });
+  运行
+      gulp
+2.gulp的方法
+  gulp.task(str,fn)
+    创建一个gulp任务
+  gulp.src(path)
+    文件来源
+  gulp.dest(path)
+    操作之后的文件到哪里去
+  .pipe(package)
+    执行一个gulp功能
+  gulp.watch()
+    监听
+  gulp.start()
+    执行gulp任务
+3.插件
+  1.压缩JavaScript文件
+    1.安装插件
+      npm install --save-dev gulp-uglify
+      代码
+      gulp.task("jsuglify",function(){
+        gulp.src("src/js/demo.js")
+            .pipe(jsUglify())
+            .pipe(gulp.dest("dist/js"))
+      })
+  2.压缩CSS文件
+    1.安装
+      npm install --save-dev gulp-minify-css
+  3.压缩HTML文件
+    1.安装
+      npm install --save-dev gulp-minify-html
+  4.图片压缩
+    npm install --save-dev gulp-imagemin
+  5.代码检查
+    npm install --save-dev gulp-jshint jshint
+    公司learder自己编写代码规范，按照他的规范来写代码！！！
+  6.合并、重命名
+    npm install --save-dev gulp-concat gulp-rename
+  7.Less编译为CSS文件
+    npm install --save-dev gulp-less
+  8.监听
+    gulp.task("watchLess",function(){
+      gulp.watch("src/css/*.less",function(){
+        gulp.run("reless")
+      })
+    })
+  9.热更新：
+    1.命令：npm install gulp-livereload --save-dev
+    2.全局服务器：npm install -g http-server
+    3.浏览器打开：chrome://extensions/ 浏览器插件：LiveReload （直接点击启动）
+    4.编写热更新的代码
+    5.启动热更新
+      1.在项目根目录下启动http-server
+      2.启动热更新：hot
+      3.打开浏览器启动项目
+      4.启动浏览器（livereload）插件，将空心圆点成实心圆
+
+# 三、模块基础
 
 # 四、JavaScript基础
 
