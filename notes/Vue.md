@@ -9,8 +9,8 @@
 * [二、前端构建工具](#二前端构建工具)
   * [Webpack概念](#Webpack概念)
   * [Gulp概念](#Gulp概念)
-* [三、模块基础](#三模块基础)
-* [四、JavaScript基础](#三JavaScript基础)
+* [三、Vue基础](#三Vue基础)
+* [四、Vue网络请求](#四Vue网络请求)
   * [JavaScript概念](#JavaScript概念)
   * [JavaScript引用类型](#JavaScript引用类型)
 * [五、文件系统](#四文件系统)
@@ -84,23 +84,25 @@ nvm npm_mirror  https://npm.taobao.org/mirrors/npm/
 ### 2. NVM命令
 
 windows下nvm的命令([]中的参数可有可无)：
-|              命令              |                                             意义                                             |
-| :----------------------------: | :------------------------------------------------------------------------------------------: |
-|            nvm arch            |                             查看当前系统的位数和当前nodejs的位数                             |
-| nvm install < version > [arch] |                安装制定版本的node 并且可以指定平台 version 版本号  arch 平台                 |
-|      nvm list [available]      |                                                                                              |
-|           - nvm list           |                                      查看已经安装的版本                                      |
-|      - nvm list installed      |                                      查看已经安装的版本                                      |
-|      - nvm list available      |                                    查看网络可以安装的版本                                    |
-|             nvm on             |                                      打开nodejs版本控制                                      |
-|            nvm off             |                                      关闭nodejs版本控制                                      |
-|        nvm proxy [url]         |                                        查看和设置代理                                        |
-|     nvm node_mirror [url]      |      设置或查看setting.txt中的node_mirror，如果不设置的默认是 https://nodejs.org/dist/       |
-|      nvm npm_mirror [url]      | 设置或查看setting.txt中的npm_mirror,如果不设置的话默认：https://github.com/npm/npm/archive/. |
-|   nvm uninstall < version >    |                                        卸载制定的版本                                        |
-|    nvm use [version] [arch]    |                                   切换制定的node版本和位数                                   |
-|        nvm root [path]         |                                      设置和查看root路径                                      |
-|          nvm version           |                                        查看当前的版本                                        |
+
+|                   命令                   |                                  意义                                  |
+| :--------------------------------------: | :--------------------------------------------------------------------: |
+|                 nvm arch                 |                  查看当前系统的位数和当前nodejs的位数                  |
+|  nvm install < version >&#91;arch&#93;   |     安装制定版本的node 并且可以指定平台 version 版本号  arch 平台      |
+|      nvm list &#91; available &#93;      |                                                                        |
+|                - nvm list                |                           查看已经安装的版本                           |
+|           - nvm list installed           |                           查看已经安装的版本                           |
+|           - nvm list available           |                         查看网络可以安装的版本                         |
+|                  nvm on                  |                           打开nodejs版本控制                           |
+|                 nvm off                  |                           关闭nodejs版本控制                           |
+|         nvm proxy &#91;url&#93;          |                             查看和设置代理                             |
+|      nvm node_mirror &#91;url&#93;       |    设置或查看setting.txt中node_mirror，默认https://nodejs.org/dist/    |
+|       nvm npm_mirror &#91;url&#93;       | 设置或查看setting中npm_mirror,默认https://github.com/npm/npm/archive/. |
+|        nvm uninstall < version >         |                             卸载制定的版本                             |
+| nvm use &#91;version&#93; &#91;arch&#93; |                        切换制定的node版本和位数                        |
+|         nvm root &#91;path&#93;          |                           设置和查看root路径                           |
+|               nvm version                |                             查看当前的版本                             |
+
 下面是安装和使切换nodejs的几个简单的命令使用：
 nvm install 10.16.0 64-bit
 nvm use 10.16.0
@@ -426,78 +428,207 @@ npm install --save @babel/polyfill
 自动化。对于需要反复重复的任务，例如压缩（minification）、编译、单元测试、linting等，自动化工具可以减轻你的劳动，简化你的工作。
 gulp或者grunt都仅仅是一个操作平台，他们本身做不了任何事情，要做事情需要通过插件
 
-1.gulp的使用
-  全局安装：
-      npm install --global gulp
-  创建项目：
-      LearnGulp
-  项目依赖安装：
-      npm install --save-dev gulp
-  在项目根目录下创建一个名为 gulpfile.js 的文件：
-      var gulp = require('gulp');
-      gulp.task('default', function() {
-      // 将你的默认的任务代码放在这
-      });
-  运行
-      gulp
-2.gulp的方法
-  gulp.task(str,fn)
-    创建一个gulp任务
-  gulp.src(path)
-    文件来源
-  gulp.dest(path)
-    操作之后的文件到哪里去
-  .pipe(package)
-    执行一个gulp功能
-  gulp.watch()
-    监听
-  gulp.start()
-    执行gulp任务
-3.插件
-  1.压缩JavaScript文件
-    1.安装插件
-      npm install --save-dev gulp-uglify
-      代码
-      gulp.task("jsuglify",function(){
-        gulp.src("src/js/demo.js")
-            .pipe(jsUglify())
-            .pipe(gulp.dest("dist/js"))
-      })
-  2.压缩CSS文件
-    1.安装
-      npm install --save-dev gulp-minify-css
-  3.压缩HTML文件
-    1.安装
-      npm install --save-dev gulp-minify-html
-  4.图片压缩
-    npm install --save-dev gulp-imagemin
-  5.代码检查
-    npm install --save-dev gulp-jshint jshint
-    公司learder自己编写代码规范，按照他的规范来写代码！！！
-  6.合并、重命名
-    npm install --save-dev gulp-concat gulp-rename
-  7.Less编译为CSS文件
-    npm install --save-dev gulp-less
-  8.监听
-    gulp.task("watchLess",function(){
-      gulp.watch("src/css/*.less",function(){
-        gulp.run("reless")
-      })
+### 1.gulp的使用
+
+全局安装：
+  官网:npm install --global gulp-cli
+  npm install --global gulp
+创建项目：
+  LearnGulp
+项目依赖安装：
+  npm install --save-dev gulp
+在项目根目录下创建一个名为 gulpfile.js 的文件：
+  var gulp = require('gulp');
+  gulp.task('default', function() {
+  // 将你的默认的任务代码放在这
+  });
+运行
+  gulp
+
+### 2.gulp的方法
+
+gulp.task(str,fn)
+  创建一个gulp任务
+gulp.src(path)
+  文件来源
+gulp.dest(path)
+  操作之后的文件到哪里去
+.pipe(package)
+  执行一个gulp功能
+gulp.watch()
+  监听
+gulp.start()
+  执行gulp任务
+
+### 3.插件
+
+1.压缩JavaScript文件
+  1.安装插件
+    npm install --save-dev gulp-uglify
+    代码
+    gulp.task("jsuglify",function(){
+      gulp.src("src/js/demo.js")
+          .pipe(jsUglify())
+          .pipe(gulp.dest("dist/js"))
     })
-  9.热更新：
-    1.命令：npm install gulp-livereload --save-dev
-    2.全局服务器：npm install -g http-server
-    3.浏览器打开：chrome://extensions/ 浏览器插件：LiveReload （直接点击启动）
-    4.编写热更新的代码
-    5.启动热更新
-      1.在项目根目录下启动http-server
-      2.启动热更新：hot
-      3.打开浏览器启动项目
-      4.启动浏览器（livereload）插件，将空心圆点成实心圆
+2.压缩CSS文件
+  1.安装
+    npm install --save-dev gulp-minify-css
+3.压缩HTML文件
+  1.安装
+    npm install --save-dev gulp-minify-html
+4.图片压缩
+  npm install --save-dev gulp-imagemin
+5.代码检查
+  npm install --save-dev gulp-jshint jshint
+  公司learder自己编写代码规范，按照他的规范来写代码！！！
+6.合并、重命名
+  npm install --save-dev gulp-concat gulp-rename
+7.Less编译为CSS文件
+  npm install --save-dev gulp-less
+8.监听
+  gulp.task("watchLess",function(){
+    gulp.watch("src/css/*.less",function(){
+      gulp.run("reless")
+    })
+  })
+9.热更新：
+  1).命令：npm install gulp-livereload --save-dev
+  2).全局服务器：npm install -g http-server
+  3).浏览器打开：chrome://extensions/ 浏览器插件：LiveReload （直接点击启动）
+  4).编写热更新的代码
+  5).启动热更新
+    (1).在项目根目录下启动http-server
+    (2).启动热更新：hot
+    (3).打开浏览器启动项目
+    (4).启动浏览器（livereload）插件，将空心圆点成实心圆
 
-# 三、模块基础
+# 三、Vue基础
 
-# 四、JavaScript基础
+## Vue环境搭建
+
+### 1.安装Vue
+
+注：node版本必须大于等于8.9
+
+```javascript
+npm install -g @vue/cli
+// OR
+yarn global add @vue/cli
+
+// 拉取 2.x 模板
+npm install -g @vue/cli-init
+// `vue init` 的运行效果将会跟 `vue-cli@2.x` 相同
+vue init webpack my-project
+```
+
+### 2.创建项目
+
+vue create hello-world
+
+vue init webpack my-project
+注：安装依赖的时候，选择最后一个，就是自己安装
+cd my-project
+npm start/npm run dev
+
+### 3.工程目录
+
+### 4.基础指令
+
+Mustache：{{ 变量 }}  只能存在单行语句
+v-once:只能渲染一次
+v-html:解析HTML结构
+v-bind:指令（解析属性中的对象）
+v-bind简写：(:)
+v-if:条件渲染
+v-show:条件渲染
+
+### 5.v-if vs v-show
+
+v-if 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。
+v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。
+相比之下，v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。
+一般来说，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。
+
+### 6.列表渲染
+
+v-for
+
+### 7.事件处理
+
+// 在 `methods` 对象中定义方法
+1.事件改变data数据，data数据改变会引起视图的变化
+2.事件传递参数
+  $event
+3.数组更新检测
+  append，unshift
+  最开始讲数组的时候：老师在讲一个方法的时候会说，返回一个原数组还是新数组
+  变异方法：
+    改变原数组，则可以引起视图更新
+    不改变原数组，创建新数组，则无法引起视图更新
+
+### 组件模板
+
+```javascript
+<template lang="html">
+  <!-- 只能存在一个根容器 -->
+  <div></div>
+</template>
+
+<script>
+export default {
+
+}
+</script>
+
+<style lang="css">
+</style>
+```
+
+### 8.计算属性
+
+计算属性缓存 vs 方法
+  我们可以将同一函数定义为一个方法而不是一个计算属性。两种方式的最终结果确实是完全相同的。然而，不同的是计算属性是基于它们的依赖进行缓存的。计算属性只有在它的相关依赖发生改变时才会重新求值。这就意味着只要 message 还没有发生改变，多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而不必再次执行函数
+
+### 9.Class与Style绑定
+
+#### 绑定Class
+
+对象语法
+
+数组语法
+
+用在组件
+
+#### 绑定Style
+
+当 `v-bind:style` 使用需要添加浏览器引擎前缀的 CSS 属性时，如 transform，Vue.js 会自动侦测并添加相应的前缀。
+
+### 10.表单输入绑定
+
+修饰符：
+  .lazy
+  .number
+  .trim
+watch:监听事件
+
+### 11.组件传递数据props
+
+### 12.自定义事件向父组件传递数据
+
+// 接受参数的数据名称,传递的数据
+$emit(自定义事件)
+
+### 13.动态组件&异步组件
+
+```javascript
+<!-- 失活的组件将会被缓存！-->
+<keep-alive>
+  <component v-bind:is="currentComponent"></component>
+</keep-alive>
+```
+
+# 四、Vue网络请求
 
 ## VueDevtools插件的安装
 
