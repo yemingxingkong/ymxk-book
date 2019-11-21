@@ -10,6 +10,8 @@
   * [Webpack概念](#Webpack概念)
   * [Gulp概念](#Gulp概念)
 * [三、Vue基础](#三Vue基础)
+  * [VueDevtools插件的安装](#VueDevtools插件的安装)
+  * [Vue环境搭建](#Vue环境搭建)
 * [四、Vue网络请求](#四Vue网络请求)
   * [JavaScript概念](#JavaScript概念)
   * [JavaScript引用类型](#JavaScript引用类型)
@@ -505,6 +507,30 @@ gulp.start()
 
 # 三、Vue基础
 
+## VueDevtools插件的安装
+
+github下载插件，npm包安装依赖，拖入浏览器扩展程序
+
+具体操作：
+1.下载chrome扩展插件。
+  在github上下载压缩包并解压到本地，github下载地址：https://github.com/vuejs/vue-devtools
+
+2.npm install
+  下载完成后打开命令行cmd进入vue-devtools-master文件夹，
+  1.npm install，安装依赖包；如果安装太慢，请参照文章末尾说明进行操作。
+  2.npm run build
+  npm run build 执行完，会在shells>chrome下的src文件夹里生产如上图所示的几个js文件；
+  若不执行以上命令会报错，无法加载背景脚本"build/background.js"
+
+3.打开shells>chrome>manifest.json并把json文件里的"persistent":false改成true
+
+4.扩展chrome插件
+  1.打开chrome浏览器，打开更多工具>扩展程序；
+  2.再点击加载已解压的扩展程序，然后把shells>chrome文件夹放入
+
+5.测试安装成功
+在插件的目录下执行npm run dev，这个时候我们的插件就可以运行了,打开localhost:8080可以看到插件已经安装并运行了。
+
 ## Vue环境搭建
 
 ### 1.安装Vue
@@ -577,11 +603,44 @@ v-for
 
 <script>
 export default {
-
+  name: '组件名称',
+  data () {
+    return {
+      message: '组件数据'
+    }
+  },
+  // 在 `methods` 对象中定义方法
+  methods:{
+    changeCss: function() {
+      this.cssObj = {
+        c1: false,
+        c2: true
+      };
+    }
+  },
+  // 计算属性
+  computed: {
+    getMessage: function() {
+      // `this` 指向 vm 实例
+      return this.message
+        .split("")
+        .reverse()
+        .join("");
+    }
+  },
+  // 实时监听数据变化
+  watch: {
+    inputmsg(data) {
+      if (data == "100") {
+        this.inputmsg = "符合条件";
+      }
+    }
+  },
 }
 </script>
-
-<style lang="css">
+// class只在该组件使用
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="css" scoped>
 </style>
 ```
 
@@ -630,110 +689,151 @@ $emit(自定义事件)
 
 # 四、Vue网络请求
 
-## VueDevtools插件的安装
+## Vue生命周期
 
-github下载插件，npm包安装依赖，拖入浏览器扩展程序
+beforeCreate 创建前状态：在实例初始化之后，数据观测和事件配置之前被调用，此时组件的选项对象还未创建，el 和 data 并未初始化，因此无法访问methods， data， computed等上的方法和数据。
 
-具体操作：
-1.下载chrome扩展插件。
-  在github上下载压缩包并解压到本地，github下载地址：https://github.com/vuejs/vue-devtools
-2.npm install
-  下载完成后打开命令行cmd进入vue-devtools-master文件夹，
-  1.npm install，安装依赖包；如果安装太慢，请参照文章末尾说明进行操作。
-  2.npm run build
-  npm run build 执行完，会在shells>chrome下的src文件夹里生产如上图所示的几个js文件；
-  若不执行以上命令会报错，无法加载背景脚本"build/background.js"，如下图：
-3.打开shells>chrome>manifest.json并把json文件里的"persistent":false改成true
-4.扩展chrome插件
-  1.打开chrome浏览器，打开更多工具>扩展程序；
-  2.再点击加载已解压的扩展程序，然后把shells>chrome文件夹放入
-5.测试安装成功
-在插件的目录下执行npm run dev，这个时候我们的插件就可以运行了,打开localhost:8080可以看到插件已经安装并运行了。
+created 创建完毕状态：实例已经创建完成之后被调用，在这一步，实例已完成以下配置：数据观测、属性和方法的运算，watch/event事件回调，完成了data 数据的初始化，el没有。 然而，挂在阶段还没有开始, $el属性目前不可见，这是一个常用的生命周期，因为你可以调用methods中的方法，改变data中的数据，并且修改可以通过vue的响应式绑定体现在页面上，，获取computed中的计算属性等等，通常我们可以在这里对实例进行预处理，也有一些童鞋喜欢在这里发ajax请求，值得注意的是，这个周期中是没有什么方法来对实例化过程进行拦截的，因此假如有某些数据必须获取才允许进入页面的话，并不适合在这个方法发请求，建议在组件路由钩子beforeRouteEnter中完成
 
-### 1. 数据类型
+beforeMount 挂载前状态：挂在开始之前被调用，相关的render函数首次被调用（虚拟DOM），实例已完成以下的配置： 编译模板，把data里面的数据和模板生成html，完成了el和data 初始化，注意此时还没有挂在html到页面上。
 
-typeof操作数：number数值，object对象或null，function函数，typeof(message)。
+mounted 挂载结束状态：挂在完成，也就是模板中的HTML渲染到HTML页面中，此时一般可以做一些ajax操作，mounted只会执行一次。
 
-Undefined：undefined未定义。
+beforeUpdate 更新前状态：在数据更新之前被调用，发生在虚拟DOM重新渲染和打补丁之前，可以在该钩子中进一步地更改状态，不会触发附加地重渲染过程
 
-Null：空对象指针。
+updated 更新完成状态：在由于数据更改导致地虚拟DOM重新渲染和打补丁只会调用，调用时，组件DOM已经更新，所以可以执行依赖于DOM的操作，然后在大多是情况下，应该避免在此期间更改状态，因为这可能会导致更新无限循环，该钩子在服务器端渲染期间不被调用
 
-Boolean：var messageAsBoolean=Boolean(message);，message转换为Boolean值。空字符串，0，null，NaN，undefined：返回false。
+beforeDestroy 销毁前状态：在实例销毁之前调用，实例仍然完全可用，1）这一步还可以用this来获取实例，2）一般在这一步做一些重置的操作，比如清除掉组件中的定时器 和 监听的dom事件
 
-Number：浮点数值，计算精度不准。数值范围：最小值5e-324，最大值1.797693e+308，-Infinity(负无穷)，Infinity(正无穷)。NaN：Not a Number非数值，alert(isNaN("bl"));//不是数值返回true。数值转换：Number()用于任何类型，parseInt()用于字符串转换为整型，parseFloat()字符串转换为小数。
+destroyed 销毁完成状态：在实例销毁之后调用，调用后，所以的事件监听器会被移出，所有的子实例也会被销毁，该钩子在服务器端渲染期间不被调用
 
-String：字符字面量，转义字符。特点，不可变，var lang="Java"; lang=lang+"Script";。转换为字符串：toString()，可传参表示进制；String()，不知转化的值null或undefined。
+## Vue组件深入
 
-Object：var o=new Object();对象就是一组数据和功能的集合。
+### 1. Props的验证
 
-### 2. 操作符
+`Prop` 的大小写 (camelCase vs kebab-case)
 
-位
+`Prop` 类型
 
-|     格式      |        损失         |      透明       |
-| :-----------: | :-----------------: | :-------------: |
-|     位与&     |     9&15  得到9     | 1001&1111=1001  |
-|  位或&#124;   | 1001&#124;1111=1111 |                 |
-|    位异或^    |   1001^1111=0110    |                 |
-|    位非！     |     6转化为 -7      |                 |
-|    左移<<     |     9<<2 得到36     | 1001得到 100100 |
-|    右移>>     |     1001得到10      |                 |
-| 无符号右移>>> |                     |                 |
+传递静态或动态 `Prop`
 
-逻辑
+`Prop` 验证
 
-!非：alert(!false);alert(!!"blue");//true。返回true：空字符串，0，null，NaN，undefined。
-&&与：第一个值为false时，返回false；第一个值为对象，返回第二个值；第一个为true，第二个为对象，返回对象；有一个为null，返回null；有一个为NaN，返回NaN；有一个为undefined，返回undefined。||
-&#124;&#124;或：有一个不是布尔值；第一个为对象，返回第一个值；第一个为false，返回第二个值；都为对象，返回第一个值；都为null，返回null；都为NaN，返回NaN；都为undefined，返回undefined。
+类型检查
 
-相等
+### 2. 插槽
 
-先转换在比较，==相等，！=不等。仅比较不转换，===等同，！==不等同。
+插槽内容：内容展示由父组件传递给子组件（UI是由父组件传递的）
+UI上要显示的内容由子组件决定
 
-### 3. 语句
+编译作用域：
 
-条件执行
-if
-if...else
-switch
+具名插槽：`<slot>` 元素有一个特殊的特性：name。这个特性可以用来定义额外的插槽：
 
-循环语句
-while
-do   whele
-for
-for-in
-  for(var propName in window){}
+后背内容：组件上的插槽给默认值
 
-跳转语句
-break，跳出当前循环
-continue，跳出本次循环
-return
-throw
+作用域插槽：（传递数据）展示内容由子组件决定,效果由调用方决定
 
-label：在代码中添加标签
-
-with：将代码作用域设置到一个特定对象中，推荐（不使用），with(location){var qs=serch.substring(1);var hostName=hostname;}
-
-函数
-function sayHi(name,message){alert("hellow"+name+message);}
-sayHi("lgc","你好")
-推荐：始终有返回值或始终不要返回值
-
-参数
-参数在内部是一个数组来表示的
-函数体内可通过arguments对象访问每一个元素
-function sayHi(){alert("hellow"+arguments[0]+arguments[1]);}
-function doAdd(num1,num2){  if(arguments.length==1){alert(num1+10);}  else if(arguments.length==2){alert(arguments[0]+num2);}  }
-
-没有重载：后定义函数覆盖先定义函数
-
-### 4. 作用域
-
-引用类型
+在 2.5.0+，slot-scope 不再限制在 <template> 元素上使用，而可以用在插槽内的任何元素或组件上。
 
 ```javascript
-var person=new Object();
-person.name="Nicholas";
+// 调用组件
+<slot-demo>
+  <template v-slot:v1>
+    <div class="v1Class">
+      {{ v1info }}
+    </div>
+  </template>
+  <template v-slot:v2>
+    <div class="v2Class">
+      插槽内容2
+    </div>
+  </template>
+</slot-demo>
+// 组件
+<div class="slotdemo">
+  <slot name="v1"></slot>
+  <slot name="v2">
+    我是v2默认信息
+  </slot>
+</div>
+```
+
+### 2. 处理边界问题
+
+访问元素 & 组件
+
+访问根元素（不推荐）
+
+访问父级组件实例（不推荐）
+
+访问子组件实例或子元素：原声操作，this.$refs.usernameInput
+
+依赖注入
+
+### 3. 过渡与动画
+
+#### 过渡的类名
+
+v-enter：定义进入过渡的开始状态。
+
+v-enter-active：定义进入过渡生效时的状态。
+
+v-enter-to: 2.1.8版及以上 定义进入过渡的结束状态
+
+v-leave: 定义离开过渡的开始状态。
+
+v-leave-active：定义离开过渡生效时的状态。
+
+v-leave-to: 2.1.8版及以上 定义离开过渡的结束状态。
+
+#### css动画
+
+```css
+.hello-enter-active {
+  animation: bounce-in .5s;
+}
+.hello-leave-active {
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+```
+
+#### 自定义过渡的类名
+
+Animate.css
+
+使用动画一定要脱离文档流
+
+### 4.自定义指令
+
+全局指令
+
+局部指令
+
+钩子函数
+
+钩子函数参数
+
+```javascript
+// 注册一个全局自定义指令 `v-focus`
+Vue.directive('focus', {
+  // 当前指令的生命周期 当被绑定的元素插入到 DOM 中时……
+  inserted: function (el) {
+    // 聚焦元素
+    el.focus()
+  }
+})
 ```
 
 传递参数
@@ -749,30 +849,6 @@ result=variable instanceof constructor
 alert(person instanceof Object);
 //变量person是Object吗
 ```
-
-执行环境
-
-全局执行环境(window对象)，函数执行环境
-当执行流进入一个函数时，函数的环境就会被推入一个环境栈中。而在函数执行之后，栈将其环境弹出，把控制权返回给之前的执行环境
-作用域链
-活动对象
-延长作用域链，try-catch中catch块，with语句。
-
-没有块级作用域
-
-变量声明
-  var最接近的环境是函数的局部环境
-查询标识符
-  搜索过程从作用域链的前端开始，向上逐级查询与给定名字匹配的标识符。如果在局部环境中找到
-  了该标识符，搜索过程停止，变量就绪。如果在局部环境中没有找到该变量名，则继续沿作用域链向上
-  搜索。搜索过程将一直追溯到全局环境的变量对象。
-
-垃圾收集
-
-标记清除
-引用计数
-性能问题，周期性运行
-管理内存，解除引用，将值设为null
 
 ## JavaScript引用类型
 
