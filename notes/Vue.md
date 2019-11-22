@@ -10,22 +10,14 @@
   * [Webpack概念](#Webpack概念)
   * [Gulp概念](#Gulp概念)
 * [三、Vue基础](#三Vue基础)
-  * [VueDevtools插件的安装](#VueDevtools插件的安装)
+  * [VueDevtools插件安装](#VueDevtools插件安装)
   * [Vue环境搭建](#Vue环境搭建)
 * [四、Vue网络请求](#四Vue网络请求)
-  * [JavaScript概念](#JavaScript概念)
-  * [JavaScript引用类型](#JavaScript引用类型)
-* [五、文件系统](#四文件系统)
-  * [分区与文件系统](#分区与文件系统)
-  * [组成](#组成)
-  * [文件读取](#文件读取)
-  * [磁盘碎片](#磁盘碎片)
-  * [block](#block)
-  * [inode](#inode)
-  * [目录](#目录)
-  * [日志](#日志)
-  * [挂载](#挂载)
-  * [目录配置](#目录配置)
+  * [Vue生命周期](#Vue生命周期)
+  * [Vue组件深入](#Vue组件深入)
+  * [Vue-axios网络请求](#Vue-axios网络请求)
+* [五、Vue路由](#五Vue路由)
+  * [Vue路由相关](#Vue路由相关)
 * [六、压缩与打包](#六压缩与打包)
   * [压缩文件名](#压缩文件名)
   * [压缩指令](#压缩指令)
@@ -67,7 +59,9 @@ Linux下的安装
 
 windows下的安装
 [nvm-windows](https://github.com/coreybutler/nvm-windows)
-nvm 的windows下载地址：[nvm-windows](https://github.com/coreybutler/nvm-windows/releases) , 选择第二个nvm-setup.zip，这样安装方便些。
+nvm 的windows下载地址：[nvm-windows](https://github.com/coreybutler/nvm-windows/releases) ,
+
+选择第二个nvm-setup.zip，这样安装方便些。
 将下载的文件进行解压：nvm-setup.exe，单击开始安装，直接点击下一步解可以，当然我们需要注意一下两个界面：
 设置nvm路径(相当于setting.txt中的root:)：
 设置nvm路径(相当于setting.txt中的path:)：
@@ -185,7 +179,7 @@ $ npm install -g cnpm --registry=https://registry.npm.taobao.org
 ### 1.yarn命令
 
 安装yarn
-npm install -g yarn
+`npm install -g yarn`
 
 下载依赖
 yarn install
@@ -507,7 +501,7 @@ gulp.start()
 
 # 三、Vue基础
 
-## VueDevtools插件的安装
+## VueDevtools插件安装
 
 github下载插件，npm包安装依赖，拖入浏览器扩展程序
 
@@ -598,7 +592,9 @@ v-for
 ```javascript
 <template lang="html">
   <!-- 只能存在一个根容器 -->
-  <div></div>
+  <div>
+    {{ 40|rmb }}
+  </div>
 </template>
 
 <script>
@@ -616,6 +612,14 @@ export default {
         c1: false,
         c2: true
       };
+    }
+  },
+  // 过滤器
+  filters: {
+    rmb: function(value) {
+      if (!value) return;
+      value = value.toString();
+      return "￥" + value;
     }
   },
   // 计算属性
@@ -836,347 +840,222 @@ Vue.directive('focus', {
 })
 ```
 
-传递参数
-  值类型
-    复制值
-  引用类型
-    形参同样指向实参的栈
+### 5.过滤器
 
-检测对象
+允许你自定义过滤器，可被用于一些常见的文本格式化。
+
+## Vue-axios网络请求
+
+中文参考站点：https://www.kancloud.cn/yunye/axios/234845
+vue官网维护了一个网络请求：vue-resource,后期不维护了，推荐使用axios
+
+### 1. axios基础
+
+Axios 是一个基于 promise 的 HTTP 库，可以用在浏览器和 node.js 中。
+安装：
+  npm install --save axios
+引入：
+  import Axios from "axios"
+  Vue.prototype.$axios = Axios
+使用：
 
 ```javascript
-result=variable instanceof constructor
-alert(person instanceof Object);
-//变量person是Object吗
+mounted(){
+  this.$axios.get("http://www.wwtliu.com/sxtstu/blueberrypai/getChengpinInfo.php")
+  .then(res => {
+    console.log(res.data);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+}
 ```
 
-## JavaScript引用类型
+### 2. 跨域处理
 
-对象的方法
-toLocaleString()
-  分别调用toLocaleString()
-toString()
-  得到以,分割的字符串
-valueOf()
-检测类型
-  value instanceof Array
-
-### 1. Object
-
-Object
-对象字面量
+配置：
 
 ```javascript
-var person = {
-  name : "Nicholas",
-  age : 29 };
-person.name;
-person["name"];
-var propertyName = "name";
-alert(person[propertyName]);
-```
-
-### 2. Array
-
-数组
-
-```javascript
-var colors = new Array();
-var colors = new Array(20);
-var colors = new Array("red", "blue", "green");
-var colors = ["red", "blue", "green"];              colors[3] = "brown"; // 新增第四项
-var names = [];
-```
-
-检测数组
-value instanceof Array
-ES5      if (Array.isArray(value)){}
-
-继承方法
-  toLocaleString()     取得每一项的值，调用的是每一项的 toLocale-String() 方法
-  toString()      得到以,分割的字符串
-  valueOf()       返回的还是数组
-
-转换
-  join()    重现了toString()
-
-栈方法
-  数组可表现像栈，LIFO后进先出。
-  push()      插入(推入)可推入多项
-  pop()       移除(弹出)后面项
-
-队列方法
-  FIFO先进先出
-  shift()        移除第一项
-  unshift();     插入，前面插入
-
-重排序
-  sort()排序      根据toString()之后升序排列
-
-```javascript
-// 代码示例
-function compare(value1, value2) {
-  if (value1 < value2) {
-    return -1;
-  } else if (value1 > value2) {
-      return 1;
-    } else {
-      return 0;
+proxyTable: {
+  '/doubai_api':{
+      target: 'http://api.douban.com',
+      pathRewrite: {
+              '^/doubai': ''
+      },
+      changeOrigin: true
     }
 }
-var values = [0, 1, 5, 10, 15];
-values.sort(compare);
-alert(values); // 0,1,5,10,15
-// 调用示例
-function compare(value1, value2){
-  return value2 - value1;
+```
+
+main.js：
+  Vue.prototype.HOST = "/doubai_api"
+
+访问：
+
+```javascript
+var url = this.HOST + "/v2/movie/top250";
+  this.$axios({
+    method: 'get',
+    url: url
+  })
+  .then(res => {
+    console.log(res.data);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+```
+
+# 五、Vue路由
+
+## Vue路由相关
+
+注意：项目在初始化的时候不要集成`vue-router`
+
+安装：`cnpm install vue-router --save`
+
+### 1.路由基础
+
+如果在一个模块化工程中使用它，必须要通过 Vue.use() 明确地安装路由功能：
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+### 2.创建路由
+
+```javascript
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/user/:userId',
+      name: 'user',
+      component: User
+    }
+  ]
+})
+// 给出路由显示的位置
+<router-view></router-view>
+// 跳转路由
+<router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
+router.push({ name: 'user', params: { userId: 123 }})
+```
+
+### 3.给出路由显示的位置
+
+`<router-view />`
+
+### 4.将路由对象注入Vue实例中
+
+`router`
+
+### 5.路由跳转
+
+`router-link`
+属性：`tag`
+
+### 6.动态路由匹配（参数传递）
+
+`/:id`
+
+```javascript
+const User = {
+  template: '<div>User</div>'
+}
+
+const router = new VueRouter({
+  routes: [
+    // 动态路径参数 以冒号开头
+    { path: '/user/:id', component: User }
+  ]
+})
+
+// 页面中使用
+{{ this.$route.params.id }}
+```
+
+### 7.路由嵌套
+
+```javascript
+{
+  path:"/learn",
+  name:"LearnVue", // 跳转
+  component:LearnVue,
+  children:[
+    {
+      path:"base",
+      component:Base
+    },
+    {
+      path:"http",
+      component:Http
+    }
+  ]
 }
 ```
 
-  reverse()反转
+### 8.编程式的导航
 
-操作方法
-  concat();     复制当前数组，并向后面添加元素或数组，返回新数组
-  slice();      返回指定位置到结束位置的所有项数组
-  splice(2,1,"red","green");        在2的位置删除1项再插入两个字符串
+`this.$router.push`跳转页面
 
-位置方法
-  indexOf(4,3);         查找4从第3项开始，返回索引
-  lastIndexOf(4,4);     查找4从倒数第4项开始
+`this.$router.replace`替换页面
 
-迭代方法
-  every();    对数组中每一项运行给定函数，若每一项返回true，则true
-  filter();   该函数会返回true项组成的数组
-  forEach();  没有返回值
-  map();      返回每次函数调用结果组成的数组
-  some();     任意一项返回true，则true
+`this.$router.go`回退页面
+
+### 9.命名路由（参数传递）
 
 ```javascript
-var numbers = [1,2,3,4,5,4,3,2,1];
-var everyResult = numbers.every(function(item, index, array){
-  return (item > 2);
-});
+<router-link tag="li" :to="{name:'HelloWorld',params:{id:helloParams}}">Hello</router-link>
+
+this.$router.push({ name: 'HelloWorld', params: { id: this.clickParams }})
 ```
 
-  传入这些方法中的函数会接收三个参数：数组项的值、该项在数组中的位置和数组对象本身
+### 10.重定向和别名
 
-归并方法
-  reduce()        从数组的第一项开始，逐个遍历到最后
-  reduceRight()   从数组的最后一项开始，向前遍历到第一项
-  函数接收 4 个参数：前一个值、当前值、项的索引和数组对象。这个函数返回的任何值都会作为第一个参数自动传给下一项。
-
-### 3.Data
-
-日期
+重定向
 
 ```javascript
-var now = new Date();
-var some= new Date(Date.parse("May 25, 2004"));       // 如 6/13/2004
-var allFives = new Date(Date.UTC(2005, 4, 5, 17, 55, 55));
-// UTC（Coordinated Universal Time，国际协调时间）1970 年 1 月 1 日午夜（零时）开始经过的毫秒数来保存日期
+{
+  path:"*",
+  component:NotFound
+},
+{
+  path:"/",
+  // 重定向
+  redirect:"/learn"
+},
 ```
 
-Data.now() 方法   当前时间
+### 11.HTML5 History模式
 
-继承方法
-  toLocaleString()        按照与浏览器设置的地区相适应的格式        返回日期和时间
-  toString()      返回带有时区信息的日期和时间
-  valueOf()      返回日期的毫秒表示
+// mode:"history",
 
-格式化方法
-  toDateString()    格式显示星期几、月、日和年
-  toTimeString()    格式显示时、分、秒和时区
-  toLocaleDateString()      特定于地区
-  toLocaleTimeString()
-  toUTCString()     格式完整的 UTC 日期
+需要后台配置
 
-组件方法
-  getTime()    setTime( 毫秒 )    getFullYear()   等等...
+### 12.路由高亮
 
-### 4.RegExp
-
-RegExp
-支持正则表达式  var expression = / pattern / flags ;
-（pattern）部分可以是任何简单或复杂的正则表达式
-
-可带有一或多个标志（flags)
-  g ：表示全局（global）模式
-  i ：不区分大小写（case-insensitive）模式
-  m ：表示多行（multiline）模式
-RegExp 实例属性
-RegExp 实例方法
-RegExp 构造函数属性
-模式的局限性
-
-### 5.Function
-
-Function
-函数实际上是对象，“函数是对象，函数名是指针”
+```css
+/* .router-link-active{
+  color:red;
+} */
+.active{
+  color: red;
+}
+/* .router-link-exact-active{
+  border: 1px solid yellowgreen;
+} */
+.currentActive{
+  border: 1px solid yellowgreen;
+}
+```
 
 ```javascript
-  // 声明语法
-  function sum (num1, num2) {
-    return num1 + num2;
-  }
-  // 函数表达式
-  var sum = function(num1, num2){
-    return num1 + num2;
-  };
+linkActiveClass:"active",
+linkExactActiveClass:"currentActive",
 ```
 
-没有重载（深入理解），后定义函数覆盖先定义函数。
+### 13.路由实例
 
-作为值的函数
-
-```javascript
-  var data = [{name: "Zachary", age: 28}, {name: "Nicholas", age: 29}];
-  data.sort(createComparisonFunction("name"));
-  console.log(data[0].name);  //Nicholas
-  function createComparisonFunction(propertyName) {
-    return function(object1, object2){
-      var value1 = object1[propertyName];
-      var value2 = object2[propertyName];
-      if (value1 < value2){
-        return -1;
-      } else if (value1 > value2){
-        return 1;
-      } else {
-        return 0;
-      }
-    };
-  }
-```
-
-函数内部属性
-  arguments：类数组对象，包含着传入函数中的所有参数；callee 的属性，指向拥有这个 arguments 对象的函数。
-  this：函数据以执行的环境对象。当在网页的全局作用域中调用函数时，this 对象引用的就是 window
-  caller，    ES5，       保存着调用当前函数的函数的引用
-
-属性
-  length：函数希望接收的命名参数的个数
-  prototype：保存它们所有实例方法的真正所在
-
-方法
-  扩充作用域
-  apply()，在特定的作用域中调用函数；接收两个参数：一个是在其中运行函数的作用域，另一个是参数数组。
-  call()：作用同上，第二个参数都直接传递给函数
-  bind()：创建一个函数的实例，其 this 值会被绑定到传给 bind() 函数的值
-
-### 6.基本包装类型
-
-操作基本类型值的语句一经执行完毕，就会立即销毁新创建的包装对象
-Boolean，   推荐：不适用
-Number，    继承方法之外，提供了将数值格式化为字符串的方法    推荐：不适用
-String：字符方法，字符串操作，字符位置，trim()，大小写转换，模式匹配，localeCompare()，fromCharCode()。
-
-### 7.单体内置对象
-
-Global
-  （全局）对象
-  URI 编码方法
-  eval()，    完整的 ECMAScript 解析器
-  属性，    例，特殊的值，所有原生引用类型
-  window 对象
-
-Math
-  属性
-  min() 和 max() 方法
-  舍入方法
-  random() 方法
-  其他方法
-
-# 五、文件系统
-
-## 分区与文件系统
-
-对分区进行格式化是为了在分区上建立文件系统。一个分区通常只能格式化为一个文件系统，但是磁盘阵列等技术可以将一个分区格式化为多个文件系统。
-
-## 组成
-
-最主要的几个组成部分如下：
-
-- inode：一个文件占用一个 inode，记录文件的属性，同时记录此文件的内容所在的 block 编号；
-- block：记录文件的内容，文件太大时，会占用多个 block。
-
-除此之外还包括：
-
-- superblock：记录文件系统的整体信息，包括 inode 和 block 的总量、使用量、剩余量，以及文件系统的格式与相关信息等；
-- block bitmap：记录 block 是否被使用的位图。
-
-<div align="center"> <img src="pics/BSD_disk.png" width="800"/> </div><br>
-
-## 文件读取
-
-对于 Ext2 文件系统，当要读取一个文件的内容时，先在 inode 中查找文件内容所在的所有 block，然后把所有 block 的内容读出来。
-
-<div align="center"> <img src="pics/12a65cc6-20e0-4706-9fe6-3ba49413d7f6.png" width="500px"> </div><br>
-
-而对于 FAT 文件系统，它没有 inode，每个 block 中存储着下一个 block 的编号。
-
-<div align="center"> <img src="pics/5b718e86-7102-4bb6-8ca5-d1dd791530c5.png" width="500px"> </div><br>
-
-## 磁盘碎片
-
-指一个文件内容所在的 block 过于分散，导致磁盘磁头移动距离过大，从而降低磁盘读写性能。
-
-## block
-
-在 Ext2 文件系统中所支持的 block 大小有 1K，2K 及 4K 三种，不同的大小限制了单个文件和文件系统的最大大小。
-
-|     大小     |  1KB  |  2KB  |  4KB  |
-| :----------: | :---: | :---: | :---: |
-| 最大单一文件 | 16GB  | 256GB |  2TB  |
-| 最大文件系统 |  2TB  |  8TB  | 16TB  |
-
-一个 block 只能被一个文件所使用，未使用的部分直接浪费了。因此如果需要存储大量的小文件，那么最好选用比较小的 block。
-
-## inode
-
-inode 具体包含以下信息：
-
-- 权限 (read/write/excute)；
-- 拥有者与群组 (owner/group)；
-- 容量；
-- 建立或状态改变的时间 (ctime)；
-- 最近读取时间 (atime)；
-- 最近修改时间 (mtime)；
-- 定义文件特性的旗标 (flag)，如 SetUID...；
-- 该文件真正内容的指向 (pointer)。
-
-inode 具有以下特点：
-
-- 每个 inode 大小均固定为 128 bytes (新的 ext4 与 xfs 可设定到 256 bytes)；
-- 每个文件都仅会占用一个 inode。
-
-inode 中记录了文件内容所在的 block 编号，但是每个 block 非常小，一个大文件随便都需要几十万的 block。而一个 inode 大小有限，无法直接引用这么多 block 编号。因此引入了间接、双间接、三间接引用。间接引用让 inode 记录的引用 block 块记录引用信息。
-
-<div align="center"> <img src="pics/inode_with_signatures.jpg" width="600"/> </div><br>
-
-## 目录
-
-建立一个目录时，会分配一个 inode 与至少一个 block。block 记录的内容是目录下所有文件的 inode 编号以及文件名。
-
-可以看到文件的 inode 本身不记录文件名，文件名记录在目录中，因此新增文件、删除文件、更改文件名这些操作与目录的写权限有关。
-
-## 日志
-
-如果突然断电，那么文件系统会发生错误，例如断电前只修改了 block bitmap，而还没有将数据真正写入 block 中。
-
-ext3/ext4 文件系统引入了日志功能，可以利用日志来修复文件系统。
-
-## 挂载
-
-挂载利用目录作为文件系统的进入点，也就是说，进入目录之后就可以读取文件系统的数据。
-
-## 目录配置
-
-为了使不同 Linux 发行版本的目录结构保持一致性，Filesystem Hierarchy Standard (FHS) 规定了 Linux 的目录结构。最基础的三个目录如下：
-
-- / (root, 根目录)
-- /usr (unix software resource)：所有系统默认软件都会安装到这个目录；
-- /var (variable)：存放系统或程序运行过程中的数据文件。
-
-<div align="center"> <img src="pics/linux-filesystem.png" width=""/> </div><br>
+新建container文件,再建home文件夹,mine文件夹
 
 # 六、压缩与打包
 
