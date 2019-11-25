@@ -18,6 +18,7 @@
   * [Vue-axios网络请求](#Vue-axios网络请求)
 * [五、Vue路由](#五Vue路由)
   * [Vue路由相关](#Vue路由相关)
+  * [Vue第三方库](#Vue第三方库)
 * [六、压缩与打包](#六压缩与打包)
   * [压缩文件名](#压缩文件名)
   * [压缩指令](#压缩指令)
@@ -711,6 +712,27 @@ beforeDestroy 销毁前状态：在实例销毁之前调用，实例仍然完全
 
 destroyed 销毁完成状态：在实例销毁之后调用，调用后，所以的事件监听器会被移出，所有的子实例也会被销毁，该钩子在服务器端渲染期间不被调用
 
+1、我怎么在组件中引入图片？
+
+图片目录在src/assets下，在组件中引入方式如下：
+
+```html
+<img :src="reuqire('@/assets/img/demo.png')" alt="" />
+```
+
+2、我怎么无视层级导入css，或是引入图片？
+
+```javascript
+@import "~@/scss/_var.css";
+@import "~@/assets/iconfont/iconfont.css";
+background: url("~@/assets/img/xxx.png");
+```
+
+3、我想在本地和服务端调试怎么弄？
+
+修改 vue.config.js 中的 proxy 为你的服务端地址即可，如：
+proxy: 'http://xxx.com'
+
 ## Vue组件深入
 
 ### 1. Props的验证
@@ -852,11 +874,16 @@ vue官网维护了一个网络请求：vue-resource,后期不维护了，推荐�
 ### 1. axios基础
 
 Axios 是一个基于 promise 的 HTTP 库，可以用在浏览器和 node.js 中。
+
 安装：
-  npm install --save axios
+
+`npm install --save axios`
+
 引入：
-  import Axios from "axios"
-  Vue.prototype.$axios = Axios
+
+`import Axios from "axios"`
+`Vue.prototype.$axios = Axios`
+
 使用：
 
 ```javascript
@@ -1056,6 +1083,43 @@ linkExactActiveClass:"currentActive",
 ### 13.路由实例
 
 新建container文件,再建home文件夹,mine文件夹
+
+## Vue第三方库
+
+### 1.Element使用
+
+npm 安装
+
+`npm i element-ui -S`
+
+```javascript
+// import ElementUI from 'element-ui';// ElementUI全局加载
+import { Button, Row } from 'element-ui';// ElementUI按需加载
+// import 'element-ui/lib/theme-chalk/index.css';// ElementUI全局加载
+
+// ElementUI start
+// Vue.use(ElementUI);// ElementUI全局加载
+Vue.use(Button);// ElementUI按需加载
+Vue.use(Row);
+// ElementUI end
+```
+
+### 2.iview使用
+
+### 3.swiper使用
+
+安装
+
+`npm install vue-awesome-swiper --save`
+
+```javascript
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
+
+Vue.use(VueAwesomeSwiper) /* { default global options } */
+```
+
+### 4.第三方组件
 
 # 六、压缩与打包
 
@@ -1630,8 +1694,4 @@ options 参数主要有 WNOHANG 和 WUNTRACED 两个选项，WNOHANG 可以使 w
 
 # 微信公众号
 
-
 更多精彩内容将发布在微信公众号 CyC2018 上，你也可以在公众号后台和我交流学习和求职相关的问题。另外，公众号提供了该项目的 PDF 等离线阅读版本，后台回复 "下载" 即可领取。公众号也提供了一份技术面试复习大纲，不仅系统整理了面试知识点，而且标注了各个知识点的重要程度，从而帮你理清多而杂的面试知识点，后台回复 "大纲" 即可领取。我基本是按照这个大纲来进行复习的，对我拿到了 BAT 头条等 Offer 起到很大的帮助。你们完全可以和我一样根据大纲上列的知识点来进行复习，就不用看很多不重要的内容，也可以知道哪些内容很重要从而多安排一些复习时间。
-
-
-<br><div align="center"><img width="510px" src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/githubio/公众号海报7.png"></img></div>
