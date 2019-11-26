@@ -1121,6 +1121,14 @@ Vue.use(VueAwesomeSwiper) /* { default global options } */
 
 ### 4.第三方组件
 
+## Vue碰到报错
+
+找不到`node-sass`
+
+`Error: Cannot find module 'node-sass'`
+
+`cnpm install node-sass --save`
+
 # 六、压缩与打包
 
 ## 压缩文件名
