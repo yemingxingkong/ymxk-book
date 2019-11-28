@@ -19,6 +19,7 @@
 * [五、Vue路由](#五Vue路由)
   * [Vue路由相关](#Vue路由相关)
   * [Vue第三方库](#Vue第三方库)
+  * [vue-element-admin学习](#vue-element-admin学习)
 * [六、压缩与打包](#六压缩与打包)
   * [压缩文件名](#压缩文件名)
   * [压缩指令](#压缩指令)
@@ -1128,6 +1129,109 @@ Vue.use(VueAwesomeSwiper) /* { default global options } */
 `Error: Cannot find module 'node-sass'`
 
 `cnpm install node-sass --save`
+
+## vue-element-admin学习
+
+### 1.目录结构
+
+```sh
+├── build                      # 构建相关
+├── mock                       # 项目mock 模拟数据
+├── plop-templates             # 基本模板
+├── public                     # 静态资源
+│   │── favicon.ico            # favicon图标
+│   └── index.html             # html模板
+├── src                        # 源代码
+│   ├── api                    # 所有请求
+│   ├── assets                 # 主题 字体等静态资源
+│   ├── components             # 全局公用组件
+│   ├── directive              # 全局指令
+│   ├── filters                # 全局 filter
+│   ├── icons                  # 项目所有 svg icons
+│   ├── lang                   # 国际化 language
+│   ├── layout                 # 全局 layout
+│   ├── router                 # 路由
+│   ├── store                  # 全局 store管理
+│   ├── styles                 # 全局样式
+│   ├── utils                  # 全局公用方法
+│   ├── vendor                 # 公用vendor
+│   ├── views                  # views 所有页面
+│   ├── App.vue                # 入口页面
+│   ├── main.js                # 入口文件 加载组件 初始化等
+│   └── permission.js          # 权限管理
+├── tests                      # 测试
+├── .env.xxx                   # 环境变量配置
+├── .eslintrc.js               # eslint 配置项
+├── .babelrc                   # babel-loader 配置
+├── .travis.yml                # 自动化CI配置
+├── vue.config.js              # vue-cli 配置
+├── postcss.config.js          # postcss 配置
+└── package.json               # package.json
+```
+
+### 2.布局
+
+`@/layout`整体布局
+
+### 3.路由和侧边栏
+
+本项目侧边栏主要基于 element-ui 的 el-menu 改造
+
+`@/views/layout/components/Sidebar`
+
+### 4.权限验证
+
+通过获取当前用户的权限去比对路由表，生成当前用户具的权限可访问的路由表，通过 `router.addRoutes` 动态挂载到 `router` 上。
+
+逻辑修改：现在路由层面权限的控制代码都在 @/permission.js 中，如果想修改逻辑，直接在适当的判断逻辑中 next() 释放钩子即可
+
+指令权限：封装了一个指令权限，能简单快速的实现按钮级别的权限判断。 v-permission
+
+### 5.新增页面
+
+新增完路由之后不要忘记在 @/views 文件下 创建对应的文件夹，一般性一个路由对应一个文件，该模块下的功能组件或者方法就建议在本文件夹下创建一个utils或components文件夹，各个功能模块维护自己的utils或components组件
+
+`@/api` 文件夹下创建本模块对应的 api 服务
+
+新增组件:拆分组件最大的好处不是公用而是可维护性！
+
+在全局的 `@/components` 只会写一些全局的组件，如富文本，各种搜索组件，封装的日期组件等等能被公用的组件。每个页面或者模块特定的业务组件则会写在当前 `views` 下面。如：`@/views/article/components/xxx.vue`
+
+### 6.样式
+
+所有全局样式都在 `@/src/styles` 目录下设置
+
+```sh
+├── styles
+│   ├── btn.scss                 # 按钮样式
+│   ├── element-ui.scss          # 全局自定义 element-ui 样式
+│   ├── index.scss               # 全局通用样式
+│   ├── mixin.scss               # 全局mixin
+│   ├── sidebar.scss             # sidebar css
+│   ├── transition.scss          # vue transition 动画
+│   └── variables.scss           # 全局变量
+```
+
+自定义 element-ui 样式
+
+现在我们来说说怎么覆盖 element-ui 样式。由于 element-ui 的样式我们是在全局引入的，所以你想在某个页面里面覆盖它的样式就不能加 scoped，但你又想只覆盖这个页面的 element 样式，你就可在它的父级加一个 class，用命名空间来解决问题。
+
+```css
+.article-page {
+  /* 你的命名空间 */
+  .el-tag {
+    /* element-ui 元素*/
+    margin-right: 0px;
+  }
+}
+```
+
+### 7.和服务端进行交互
+
+`import 'normalize.css/normalize.css' // a modern alternative to CSS resets`
+其中，@/src/utils/request.js 是基于 axios 的封装
+
+与`mock`联调
 
 # 六、压缩与打包
 
