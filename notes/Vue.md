@@ -727,6 +727,7 @@ destroyed 销毁完成状态：在实例销毁之后调用，调用后，所以�
 @import "~@/scss/_var.css";
 @import "~@/assets/iconfont/iconfont.css";
 background: url("~@/assets/img/xxx.png");
+background: url("~/assets/img/xxx.png");
 ```
 
 3、我想在本地和服务端调试怎么弄？
@@ -1118,6 +1119,32 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 
 Vue.use(VueAwesomeSwiper) /* { default global options } */
+```
+
+```html
+<swiper :options="swiperOption">
+  <swiper-slide>I'm Slide 1</swiper-slide>
+  <swiper-slide>I'm Slide 2</swiper-slide>
+  <swiper-slide>I'm Slide 3</swiper-slide>
+  <div slot="pagination" class="swiper-pagination" />
+  <div slot="button-prev" class="swiper-button-prev" />
+  <div slot="button-next" class="swiper-button-next" />
+  <div slot="scrollbar" class="swiper-scrollbar" />
+</swiper>
+```
+
+```javascript
+data(){
+  return{
+    swiperOption:{
+      autoplay:true,
+      delay:2000,
+      pagination: {
+        el: '.swiper-pagination'
+      }
+    }
+  }
+},
 ```
 
 ### 4.第三方组件
