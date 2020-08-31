@@ -11,7 +11,7 @@
   * [Gulp概念](#Gulp概念)
 * [三、Vue基础](#三Vue基础)
   * [VueDevtools插件安装](#VueDevtools插件安装)
-  * [Vue环境搭建](#Vue环境搭建)
+  * [Vue基础知识](#Vue基础知识)
 * [四、Vue网络请求](#四Vue网络请求)
   * [Vue生命周期](#Vue生命周期)
   * [Vue组件深入](#Vue组件深入)
@@ -20,11 +20,12 @@
   * [Vue路由相关](#Vue路由相关)
   * [Vue第三方库](#Vue第三方库)
   * [vue-element-admin学习](#vue-element-admin学习)
-* [六、压缩与打包](#六压缩与打包)
-  * [压缩文件名](#压缩文件名)
+* [六、Vuex](#六Vuex)
+  * [Vuex安装](#Vuex安装)
+  * [状态管理模式](#状态管理模式)
   * [压缩指令](#压缩指令)
   * [打包](#打包)
-* [七、Bash](#七bash)
+* [七、VueSSR](#七VueSSR)
   * [特性](#特性)
   * [变量操作](#变量操作)
   * [指令搜索顺序](#指令搜索顺序)
@@ -83,23 +84,23 @@ nvm npm_mirror  https://npm.taobao.org/mirrors/npm/
 
 windows下nvm的命令([]中的参数可有可无)：
 
-|                   命令                   |                                  意义                                  |
-| :--------------------------------------: | :--------------------------------------------------------------------: |
-|                 nvm arch                 |                  查看当前系统的位数和当前nodejs的位数                  |
-|  nvm install < version >&#91;arch&#93;   |     安装制定版本的node 并且可以指定平台 version 版本号  arch 平台      |
-|      nvm list &#91; available &#93;      |                                                                        |
-|                - nvm list                |                           查看已经安装的版本                           |
-|           - nvm list installed           |                           查看已经安装的版本                           |
-|           - nvm list available           |                         查看网络可以安装的版本                         |
-|                  nvm on                  |                           打开nodejs版本控制                           |
-|                 nvm off                  |                           关闭nodejs版本控制                           |
-|         nvm proxy &#91;url&#93;          |                             查看和设置代理                             |
-|      nvm node_mirror &#91;url&#93;       |    设置或查看setting.txt中node_mirror，默认https://nodejs.org/dist/    |
-|       nvm npm_mirror &#91;url&#93;       | 设置或查看setting中npm_mirror,默认https://github.com/npm/npm/archive/. |
-|        nvm uninstall < version >         |                             卸载制定的版本                             |
-| nvm use &#91;version&#93; &#91;arch&#93; |                        切换制定的node版本和位数                        |
-|         nvm root &#91;path&#93;          |                           设置和查看root路径                           |
-|               nvm version                |                             查看当前的版本                             |
+|                   命令                   |                              意义                              |
+| :--------------------------------------: | :------------------------------------------------------------: |
+|                 nvm arch                 |              查看当前系统的位数和当前nodejs的位数              |
+|  nvm install < version >&#91;arch&#93;   |     安装制定版本的node并且可指定平台version版本号arch平台      |
+|      nvm list &#91; available &#93;      |                                                                |
+|                - nvm list                |                       查看已经安装的版本                       |
+|           - nvm list installed           |                       查看已经安装的版本                       |
+|           - nvm list available           |                     查看网络可以安装的版本                     |
+|                  nvm on                  |                       打开nodejs版本控制                       |
+|                 nvm off                  |                       关闭nodejs版本控制                       |
+|         nvm proxy &#91;url&#93;          |                         查看和设置代理                         |
+|      nvm node_mirror &#91;url&#93;       | 设置或查看setting.txt中node_mirror,默https://nodejs.org/dist/  |
+|       nvm npm_mirror &#91;url&#93;       | 同上setting中npm_mirror,默https://github.com/npm/npm/archive/. |
+|        nvm uninstall < version >         |                         卸载制定的版本                         |
+| nvm use &#91;version&#93; &#91;arch&#93; |                    切换制定的node版本和位数                    |
+|         nvm root &#91;path&#93;          |                       设置和查看root路径                       |
+|               nvm version                |                         查看当前的版本                         |
 
 下面是安装和使切换nodejs的几个简单的命令使用：
 nvm install 10.16.0 64-bit
@@ -114,10 +115,31 @@ nvm install 10.16.0 64-bit
 
 ## NPM
 
+npm install --update-binary
+
 ### 1. NPM查看安装信息
 
-查看所有全局安装的模块：npm list -g
-查看某个模块的版本号：npm list grunt
+查看所有全局安装的模块：`npm list -g`
+查看某个模块的版本号：`npm list grunt`
+
+pm2 start npm -- run start
+
+#### 删除`node_modules`文件夹
+
+第一种方法：（最方便，删除速度超快）
+这个东西，在linux，mac上可能有bug，win可用
+`npm install rimraf -g`
+`rimraf node_modules`
+
+第二种方法：
+`rmdir /s/q your_app_dir`
+
+第三种方法：
+`rm -f /node_modules`
+
+第四种方法：
+`cnpm install -g dlf`
+`dlf  C:\Users\92809\Desktop\12`
 
 ### 2. package.json
 
@@ -172,7 +194,11 @@ repository - 包代码存放的地方的类型，可以是 git 或 svn，git 可
 main - main 字段指定了程序的主入口文件，require('moduleName') 就会加载这个文件。这个字段的默认值是模块根目录下面的 index.js。
 keywords - 关键字
 
-### 3.使用淘宝 NPM 镜像
+### 3. nrm切换包管理源
+
+npm install -g nrm
+nrm list
+nrm use
 
 $ npm install -g cnpm --registry=https://registry.npm.taobao.org
 
@@ -194,6 +220,42 @@ yarn run build
 
 整理和修复文件
 yarn run lint
+
+## ESLint
+
+1：全局安装eslint
+`npm install -g eslint`
+
+2：打开vscode 点击  “文件”-----》“首选项”----》“设置”，在右侧“用户设置”里加入一下配置：
+[参考文档](https://blog.csdn.net/yanzisu_congcong/article/details/82180348)
+
+```json
+{
+  //eslint 代码自动检查相关配置
+  "eslint.enable": true,
+  "eslint.autoFixOnSave": true,
+  "eslint.run": "onType",
+  "eslint.options": {
+    "extensions": [".js",".vue"]
+  },
+  "eslint.validate": [
+    "javascriptreact",
+    "vue",
+    "javascript", {
+        "language": "vue",
+        "autoFix": true
+    },
+    "html", {
+      "language": "html",
+      "autoFix": true
+    }
+  ],
+}
+```
+
+## Python
+
+https://blog.csdn.net/qq_36558410/article/details/80450275
 
 # 二、前端构建工具
 
@@ -527,7 +589,7 @@ github下载插件，npm包安装依赖，拖入浏览器扩展程序
 5.测试安装成功
 在插件的目录下执行npm run dev，这个时候我们的插件就可以运行了,打开localhost:8080可以看到插件已经安装并运行了。
 
-## Vue环境搭建
+## Vue基础知识
 
 ### 1.安装Vue
 
@@ -712,6 +774,27 @@ updated 更新完成状态：在由于数据更改导致地虚拟DOM重新渲染
 beforeDestroy 销毁前状态：在实例销毁之前调用，实例仍然完全可用，1）这一步还可以用this来获取实例，2）一般在这一步做一些重置的操作，比如清除掉组件中的定时器 和 监听的dom事件
 
 destroyed 销毁完成状态：在实例销毁之后调用，调用后，所以的事件监听器会被移出，所有的子实例也会被销毁，该钩子在服务器端渲染期间不被调用
+
+### 1.nuxt生命周期
+
+Incoming Request：浏览器发出一个请求
+
+nuxtServerInit：服务端接收到请求，检查当前有没有nuxtServerInit这个配置项，如果有的化就先执行这个方法，这个方法是用来操作vuex的
+
+middleware：这是一个中间件，跟路由相关，这里可以做任何想要的功能
+
+validate()：验证，配合高级动态路由去做一些验证，比如A页面是否允许跳转到B页面去，如果没有验证通过可以跳转到别的页面之类的校验
+
+asyncData()&fetch()：获取数据。asyncData()获取的数据是用来渲染vue组件的，fetch通常用来修改vuex的数据
+
+Render：渲染
+
+Naviage：如果发起了一个非Server  的路由，那么在执行一遍middleware——Render的过程
+————————————————
+原文链接：https://blog.csdn.net/huangjianfeng21/article/details/91932418
+
+
+
 
 1、我怎么在组件中引入图片？
 
@@ -1260,23 +1343,25 @@ data(){
 
 与`mock`联调
 
-# 六、压缩与打包
+# 六、Vuex
 
-## 压缩文件名
+## Vuex安装
 
-Linux 底下有很多压缩文件名，常见的如下：
+```shell
+npm install vuex --save
+yarn add vuex
+```
 
-| 扩展名     | 压缩程序                              |
-| ---------- | ------------------------------------- |
-| \*.Z       | compress                              |
-| \*.zip     | zip                                   |
-| \*.gz      | gzip                                  |
-| \*.bz2     | bzip2                                 |
-| \*.xz      | xz                                    |
-| \*.tar     | tar 程序打包的数据，没有经过压缩      |
-| \*.tar.gz  | tar 程序打包的文件，经过 gzip 的压缩  |
-| \*.tar.bz2 | tar 程序打包的文件，经过 bzip2 的压缩 |
-| \*.tar.xz  | tar 程序打包的文件，经过 xz 的压缩    |
+引入
+
+```vue
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+```
+
+## 状态管理模式
 
 ## 压缩指令
 
@@ -1299,133 +1384,150 @@ $ gzip [-cdtv#] filename
 -# ： # 为数字的意思，代表压缩等级，数字越大压缩比越高，默认为 6
 ```
 
-### 2. bzip2
+# 七、node服务
 
-提供比 gzip 更高的压缩比。
+## koa2
 
-查看命令：bzcat、bzmore、bzless、bzgrep。
+### 1.koa2开始
 
-```HTML
-$ bzip2 [-cdkzv#] filename
--k ：保留源文件
+安装
+
+`npm install -g koa-generator`
+
+创建项目
+
+`koa2 project`
+
+`koa2 -e koa2-learn`
+
+```shell
+install dependencies:
+  $ cd koa2-learn && npm install
+
+run the app:
+  $ DEBUG=koa2-learn:* npm start
 ```
 
-### 3. xz
+### 2.koa2异步
 
-提供比 bzip2 更佳的压缩比。
-
-可以看到，gzip、bzip2、xz 的压缩比不断优化。不过要注意的是，压缩比越高，压缩的时间也越长。
-
-查看命令：xzcat、xzmore、xzless、xzgrep。
-
-```HTML
-$ xz [-dtlkc#] filename
+```javascript
+// 测试接口
+router.get('/testAsync',async (ctx)=>{
+  // 异步函数 async
+  global.console.log('start',new Date().getTime())
+  // 异步函数可包含 await
+  const a=await new Promise((resolve,reject)=>{
+    setTimeout(() => {
+      global.console.log('async a',new Date().getTime())
+      resolve('aaa')
+    }, 1000);
+  })
+  const b=await 123
+  const c=await new Promise((resolve,reject)=>{
+    setTimeout(() => {
+      global.console.log('async c',new Date().getTime())
+      resolve('ccc')
+    }, 2000);
+  })
+  ctx.body={
+    a,
+    b,
+    c
+  }
+})
 ```
 
-## 打包
+### 3.koa2中间件
 
-压缩指令只能对一个文件进行压缩，而打包能够将多个文件打包成一个大文件。tar 不仅可以用于打包，也可以使用 gzip、bzip2、xz 将打包文件进行压缩。
+```javascript
+function pv(ctx){
+  // ctx 全局的对象，维持信息被各个中间件引用
+  // ctx.session.count++
+  global.console.log('pv',ctx.path)
+}
 
-```HTML
-$ tar [-z|-j|-J] [cv] [-f 新建的 tar 文件] filename...  ==打包压缩
-$ tar [-z|-j|-J] [tv] [-f 已有的 tar 文件]              ==查看
-$ tar [-z|-j|-J] [xv] [-f 已有的 tar 文件] [-C 目录]    ==解压缩
--z ：使用 zip；
--j ：使用 bzip2；
--J ：使用 xz；
--c ：新建打包文件；
--t ：查看打包文件里面有哪些文件；
--x ：解打包或解压缩的功能；
--v ：在压缩/解压缩的过程中，显示正在处理的文件名；
--f : filename：要处理的文件；
--C 目录 ： 在特定目录解压缩。
+// 导出
+module.exports=function(){
+  return async function(ctx,next){
+    global.console.log('pv start')
+    pv(ctx)
+    // 当前中间件运行完毕，交个第二个中间件
+    await next()
+    global.console.log('pv end')
+  }
+}
 ```
 
-| 使用方式 | 命令                                                  |
-| :------: | ----------------------------------------------------- |
-| 打包压缩 | tar -jcv -f filename.tar.bz2 要被压缩的文件或目录名称 |
-|  查 看   | tar -jtv -f filename.tar.bz2                          |
-|  解压缩  | tar -jxv -f filename.tar.bz2 -C 要解压缩的目录        |
+```javascript
+const pv = require('./middleware/koa-pv')
+const m1 = require('./middleware/m1')
+const m2 = require('./middleware/m2')
+const m3 = require('./middleware/m3')
 
-# 七、Bash
-
-可以通过 Shell 请求内核提供服务，Bash 正是 Shell 的一种。
-
-## 特性
-
-- 命令历史：记录使用过的命令
-- 命令与文件补全：快捷键：tab
-- 命名别名：例如 ll 是 ls -al 的别名
-- shell scripts
-- 通配符：例如 ls -l /usr/bin/X\* 列出 /usr/bin 下面所有以 X 开头的文件
-
-## 变量操作
-
-对一个变量赋值直接使用 =。
-
-对变量取用需要在变量前加上 \$ ，也可以用 \${} 的形式；
-
-输出变量使用 echo 命令。
-
-```bash
-$ x=abc
-$ echo $x
-$ echo ${x}
+app.use(pv())
+app.use(m1())
+app.use(m2())
+app.use(m3())
+app.use(json())
 ```
 
-变量内容如果有空格，必须使用双引号或者单引号。
+### 4.koa2路由
 
-- 双引号内的特殊字符可以保留原本特性，例如 x="lang is \$LANG"，则 x 的值为 lang is zh_TW.UTF-8；
-- 单引号内的特殊字符就是特殊字符本身，例如 x='lang is \$LANG'，则 x 的值为 lang is \$LANG。
+```javascript
+const router = require('koa-router')()
 
-可以使用 \`指令\` 或者 \$(指令) 的方式将指令的执行结果赋值给变量。例如 version=\$(uname -r)，则 version 的值为 4.15.0-22-generic。
+router.prefix('/users')
 
-可以使用 export 命令将自定义变量转成环境变量，环境变量可以在子程序中使用，所谓子程序就是由当前 Bash 而产生的子 Bash。
+router.get('/', function (ctx, next) {
+  ctx.body = 'this is a users response!'
+})
 
-Bash 的变量可以声明为数组和整数数字。注意数字类型没有浮点数。如果不进行声明，默认是字符串类型。变量的声明使用 declare 命令：
+router.get('/bar', function (ctx, next) {
+  ctx.body = 'this is a users/bar response'
+})
 
-```HTML
-$ declare [-aixr] variable
--a ： 定义为数组类型
--i ： 定义为整数类型
--x ： 定义为环境变量
--r ： 定义为 readonly 类型
+module.exports = router
 ```
 
-使用 [ ] 来对数组进行索引操作：
+`cookies`
 
-```bash
-$ array[1]=a
-$ array[2]=b
-$ echo ${array[1]}
+```javascript
+  ctx.cookies.set('pvid',Math.random())// 设置
+  ctx.cookies.get('pvid')//读取
 ```
 
-## 指令搜索顺序
+## `Mongoose`
 
-- 以绝对或相对路径来执行指令，例如 /bin/ls 或者 ./ls ；
-- 由别名找到该指令来执行；
-- 由 Bash 内置的指令来执行；
-- 按 \$PATH 变量指定的搜索路径的顺序找到第一个指令来执行。
+### 1.`mongoose`安装
 
-## 数据流重定向
+### 2.可视化`RoBo-3T`
 
-重定向指的是使用文件代替标准输入、标准输出和标准错误输出。
+## Redis
 
-|           1           | 代码  |   运算符   |
-| :-------------------: | :---: | :--------: |
-|   标准输入 (stdin)    |   0   |  < 或 <<   |
-|   标准输出 (stdout)   |   1   | &gt; 或 >> |
-| 标准错误输出 (stderr) |   2   | 2> 或 2>>  |
+# 七、Nuxt
 
-其中，有一个箭头的表示以覆盖的方式重定向，而有两个箭头的表示以追加的方式重定向。
+## Nuxt教程
 
-可以将不需要的标准输出以及标准错误输出重定向到 /dev/null，相当于扔进垃圾箱。
+### 1.nuxt流程图
 
-如果需要将标准输出以及标准错误输出同时重定向到一个文件，需要将某个输出转换为另一个输出，例如 2>&1 表示将标准错误输出转换为标准输出。
+vue 2
+整合vue router
+vuex
+整合ssr   vue server render
+meta
 
-```bash
-$ find /home -name .bashrc > list 2>&1
-```
+Incoming Request 请求
+nuxt Server Init 初始化nuxt服务,配置项，操作vuex
+middleware 中间件
+validate 高级路由验证
+asyncData()&fetch() 获取数据，渲染vue组件和修改vuex
+Render 渲染
+
+Navigate-->middleware
+
+### 2.nuxt基础
+
+`vue init nuxt-community/koa-template nuxt-learn`
 
 # 八、管道指令
 
