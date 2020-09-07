@@ -25,17 +25,10 @@
   * [状态管理模式](#状态管理模式)
   * [压缩指令](#压缩指令)
   * [打包](#打包)
-* [七、VueSSR](#七VueSSR)
-  * [特性](#特性)
-  * [变量操作](#变量操作)
-  * [指令搜索顺序](#指令搜索顺序)
-  * [数据流重定向](#数据流重定向)
-* [八、管道指令](#八管道指令)
-  * [提取指令](#提取指令)
-  * [排序指令](#排序指令)
-  * [双向输出重定向](#双向输出重定向)
-  * [字符转换指令](#字符转换指令)
-  * [分区指令](#分区指令)
+* [七、中间件](#七中间件)
+  * [koa2](#koa2)
+* [八、Nuxt](#八Nuxt)
+  * [Nuxt教程](#Nuxt教程)
 * [九、正则表达式](#九正则表达式)
   * [grep](#grep)
   * [printf](#printf)
@@ -790,11 +783,6 @@ asyncData()&fetch()：获取数据。asyncData()获取的数据是用来渲染vu
 Render：渲染
 
 Naviage：如果发起了一个非Server  的路由，那么在执行一遍middleware——Render的过程
-————————————————
-原文链接：https://blog.csdn.net/huangjianfeng21/article/details/91932418
-
-
-
 
 1、我怎么在组件中引入图片？
 
@@ -1384,7 +1372,7 @@ $ gzip [-cdtv#] filename
 -# ： # 为数字的意思，代表压缩等级，数字越大压缩比越高，默认为 6
 ```
 
-# 七、node服务
+# 七、中间件
 
 ## koa2
 
@@ -1504,7 +1492,7 @@ module.exports = router
 
 ## Redis
 
-# 七、Nuxt
+# 八、Nuxt
 
 ## Nuxt教程
 
@@ -1528,6 +1516,8 @@ Navigate-->middleware
 ### 2.nuxt基础
 
 `vue init nuxt-community/koa-template nuxt-learn`
+
+`analyze`进行代码优化处理
 
 # 八、管道指令
 
@@ -1929,9 +1919,6 @@ options 参数主要有 WNOHANG 和 WUNTRACED 两个选项，WNOHANG 可以使 w
 - [File system design case studies](https://www.cs.rutgers.edu/\~pxk/416/notes/13-fs-studies.HTML)
 - [Programming Project #4](https://classes.soe.ucsc.edu/cmps111/Fall08/proj4.sHTML)
 - [FILE SYSTEM DESIGN](http://web.cs.ucla.edu/classes/fall14/cs111/scribe/11a/index.HTML)
-
-
-
 
 # 微信公众号
 

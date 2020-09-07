@@ -11,7 +11,7 @@
 * [三、JavaScript基础](#三JavaScript基础)
   * [JavaScript概念](#JavaScript概念)
   * [JavaScript引用类型](#JavaScript引用类型)
-* [四、面向对象](#四面向对象)
+* [四、JavaScript面向对象](#四JavaScript面向对象)
   * [理解对象](#理解对象)
   * [创建对象](#创建对象)
   * [继承](#继承)
@@ -82,6 +82,7 @@ display:none隐藏元素或visibility:hidden可见性。
 * [菜鸟教程](https://www.runoob.com/)
 * [W3school](https://www.w3school.com.cn/)
 * [踏得](https://techbrood.com/h5b2a)
+* [压缩图片 https://tinypng.com/](https://tinypng.com/)
 * [压缩图片 https://www.picdiet.com/zh-cn](https://www.picdiet.com/zh-cn)
 
 # 二、CSS基础
@@ -96,7 +97,7 @@ display:none隐藏元素或visibility:hidden可见性。
 
 适配
 
-```html
+```css
 /* 超小型设备(手机, 600px and down) */
 @media only screen and (max-width: 600px) {
   .example {background: red;}
@@ -111,7 +112,7 @@ display:none隐藏元素或visibility:hidden可见性。
 
 ### 1. 优先级
 
-权重：相互之间叠加 	标记选择器：1 类选择器：10  id选择器：100
+权重：相互之间叠加  标记选择器：1 类选择器：10  id选择器：100
 
 特殊情况 继承样式的权重都为0 行内样式优先，在本行中使用的 权重相同，就近原则
 
@@ -133,12 +134,32 @@ a:active 鼠标单击不动时。
 
 ### 3. 盒子模型
 
+box-sizing盒子宽度和高度是否包含内边距和边框
+
+content-box:不包含border和padding
+border-box:包含border和padding
+
 ### 4. 浮动定位
 
 浮动
 
 浮动float 设置浮动元素的属性会脱离标准文档流控制 float：属性值 left向左浮动right右none默认
-清除浮动 clear：属性值 left right both清除两侧 使用空标记清除浮动 .box04{clear: left;} <div class="box04"></div> overflow清除浮动 overflow: hidden;父元素中应用 after伪对象清除浮动 .father:after{display: block;clear: both;content: ""; visibility: hidden;height: 0;}
+清除浮动
+1after伪元素清除浮动（推荐使用）
+.clearfix:after{/*伪元素是行内元素 正常浏览器清除浮动方法*/
+content: "";
+display: block;
+height: 0;
+clear:both;
+visibility: hidden;
+}
+.clearfix{
+*zoom: 1;/*ie6清除浮动的方式 *号只有IE6-IE7执行，其他浏览器不执行*/
+}
+2父级div定义 height
+3结尾处加空div标签 clear:both
+4父级div定义 overflow:hidden
+5父级div定义 overflow:auto
 
 定位position
 
@@ -924,7 +945,7 @@ requirejs(["jquery","swiper","index"],function($,swiper,index){
 
 ### 3.Require实战
 
-# 四、面向对象
+# 四、JavaScript面向对象
 
 ## 理解对象
 
@@ -934,7 +955,7 @@ requirejs(["jquery","swiper","index"],function($,swiper,index){
 
 对分区进行格式化是为了在分区上建立文件系统。一个分区通常只能格式化为一个文件系统，但是磁盘阵列等技术可以将一个分区格式化为多个文件系统。
 
-# 五、文件
+# 五、函数表达式
 
 ## 文件属性
 
