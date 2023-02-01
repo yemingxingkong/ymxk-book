@@ -5,9 +5,9 @@
 </div>
 <br>
 
-|            &nbsp;前端&nbsp;            |      &nbsp;算法&nbsp;      |             操作系统             |    &nbsp;网络&nbsp;    |        面向对象        |          &nbsp;数据库&nbsp;          |  &nbsp;Java&nbsp;&nbsp;  |         系统设计         |  &nbsp;工具&nbsp;&nbsp;  |               编码实践               |   &nbsp;后记&nbsp;   |
+|            &nbsp;前端&nbsp;            |             &nbsp;电气&nbsp;             |    &nbsp;网络&nbsp;    |        面向对象        |          &nbsp;数据库&nbsp;          |  &nbsp;Java&nbsp;&nbsp;  |         系统设计         |  &nbsp;工具&nbsp;&nbsp;  |               编码实践               |   &nbsp;后记&nbsp;   |
 | :------------------------------------: | :------------------------: | :------------------------------: | :--------------------: | :--------------------: | :----------------------------------: | :----------------------: | :----------------------: | :----------------------: | :----------------------------------: | :------------------: |
-| [:musical_score:](#musical_score-前端) | [:pencil2:](#pencil2-算法) | [:computer:](#computer-操作系统) | [:cloud:](#cloud-网络) | [:art:](#art-面向对象) | [:floppy_disk:](#floppy_disk-数据库) | [:coffee:](#coffee-java) | [:bulb:](#bulb-系统设计) | [:wrench:](#wrench-工具) | [:watermelon:](#watermelon-编码实践) | [:memo:](#memo-后记) |
+| [:musical_score:](#musical_score-前端) | [:computer:](#computer-电气) | [:cloud:](#cloud-网络) | [:art:](#art-面向对象) | [:floppy_disk:](#floppy_disk-数据库) | [:coffee:](#coffee-java) | [:bulb:](#bulb-系统设计) | [:wrench:](#wrench-工具) | [:watermelon:](#watermelon-编码实践) | [:memo:](#memo-后记) |
 
 <br>
 
@@ -19,17 +19,17 @@
 
 ## :musical_score: 前端
 
-- [前端](https://github.com/yemingxingkong/ymxk-notes/blob/master/notes/Web.md)
-- [Vue](https://github.com/yemingxingkong/ymxk-notes/blob/master/notes/Vue.md)
+- [前端](https://github.com/yemingxingkong/ymxk-notes/blob/main/notes/Web.md)
+- [Vue](https://github.com/yemingxingkong/ymxk-notes/blob/main/notes/Vue.md)
 
-## :pencil2: 算法
+## :pencil2: 电气
 
 - [算法]()
 
 ## :computer: 操作系统
 
 - [计算机操作系统]()
-- [Linux](https://github.com/yemingxingkong/ymxk-notes/blob/master/notes/Linux.md)
+- [Linux](https://github.com/yemingxingkong/ymxk-notes/blob/main/notes/Linux.md)
 
 ## :cloud: 网络
 
@@ -60,7 +60,7 @@
 
 ## :wrench: 工具
 
-- [Git](https://github.com/CyC2018/CS-Notes/blob/master/notes/Git.md)
+- [Git](https://github.com/yemingxingkong/ymxk-notes/blob/main/notes/Git.md)
 - [构建工具]()
 - [正则表达式]()
 
